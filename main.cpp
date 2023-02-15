@@ -16,6 +16,12 @@
  * dropping the final reference, to allow them to clean up.
  * This problem may also be caused by a refcounting bug in the
  * application or some element
+ *
+ * TODO 访问源码
+ * https://gitlab.freedesktop.org/gstreamer/
+ *
+ *
+ *
  */
 
 
@@ -326,7 +332,7 @@ int main(int argc, char *argv[]) {
     const char *gst_version = gst_version_string();
     printf("gstreamer version is %s\n", gst_version);
 
-//    create_element(argc, argv);
+    create_element(argc, argv);
 //
 //    create_element_by_factory(argc, argv);
 //

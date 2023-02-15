@@ -3,20 +3,61 @@ project(gstreamerExample)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
-    set(gst_root_dir /usr/lib/x86_64-linux-gnu)
-
-    include_directories(
-            /usr/include/gstreamer-1.0
-            /usr/include/glib-2.0
-            /usr//lib/x86_64-linux-gnu/glib-2.0/include
-    )
-endif ()
-
 include_directories(
         src/common
         src/stream
 )
+
+# linux 平台
+if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
+    set(gstreamer_dir /usr/lib/x86_64-linux-gnu)
+    include_directories(
+            /usr/include/gstreamer-1.0
+            /usr/include/glib-2.0
+            /usr/lib/x86_64-linux-gnu/glib-2.0/include
+    )
+
+    # 将第三方库作为动态库引用
+    add_library(gstreamer SHARED IMPORTED)
+    add_library(gst_base SHARED IMPORTED)
+    add_library(glib SHARED IMPORTED)
+    add_library(gobject SHARED IMPORTED)
+
+    #指定第三方库的绝对路径
+    set_target_properties(gstreamer PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgstreamer-1.0.so)
+    set_target_properties(gst_base PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgstbase-1.0.so)
+    set_target_properties(glib PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libglib-2.0.so)
+    set_target_properties(gobject PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgobject-2.0.so)
+
+# mac 平台
+elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    set(gstreamer_dir /usr/local/Cellar/gstreamer/1.18.5)
+    set(glib_dir /usr/local/Cellar/glib/2.70.4)
+    include_directories(
+            ${gstreamer_dir}/include/gstreamer-1.0
+            ${glib_dir}/include/glib-2.0
+            ${glib_dir}/include/gio-unix-2.0
+    )
+
+    # gstreamer 需要这种模式
+    link_libraries(
+            ${gstreamer_dir}/lib/libgstreamer-1.0.0.dylib
+            ${gstreamer_dir}/lib/libgstnet-1.0.0.dylib
+            ${gstreamer_dir}/lib/libgstcontroller-1.0.0.dylib
+            ${gstreamer_dir}/lib/libgstcheck-1.0.0.dylib
+            ${gstreamer_dir}/lib/libgstbase-1.0.0.dylib
+            ${glib_dir}/lib/libglib-2.0.0.dylib
+            ${glib_dir}/lib/libgobject-2.0.dylib
+            ${glib_dir}/lib/libgio-2.0.dylib
+            ${glib_dir}/lib/libgmodule-2.0.dylib
+            ${glib_dir}/lib/libgthread-2.0.dylib
+    )
+endif ()
+
+add_executable(gstreamerExample main.cpp
+        src/common/Logger.cpp src/common/Logger.h
+        src/common/Timestamp.cpp src/common/Timestamp.h
+        src/stream/GstreamerPusherRtmp.cpp src/stream/GstreamerPusherRtmp.h)
 
 message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME} ")
 message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM} ")
@@ -27,21 +68,8 @@ message("CMAKE_SYSTEM: ${CMAKE_SYSTEM} ")
 message("CMAKE_HOST_UNIX: ${CMAKE_HOST_UNIX} ")
 message("CMAKE_HOST_WIN32: ${CMAKE_HOST_WIN32} ")
 
-#将第三方库作为动态库引用
-add_library(gstreamer SHARED IMPORTED)
-add_library(gst_base SHARED IMPORTED)
-add_library(glib SHARED IMPORTED src/stream/Gstream_push_rtmp.cpp src/stream/Gstream_push_rtmp.h)
-add_library(gobject SHARED IMPORTED)
-
-#指定第三方库的绝对路径
-set_target_properties(gstreamer PROPERTIES IMPORTED_LOCATION ${gst_root_dir}/libgstreamer-1.0.so)
-set_target_properties(gst_base PROPERTIES IMPORTED_LOCATION ${gst_root_dir}/libgstbase-1.0.so)
-set_target_properties(glib PROPERTIES IMPORTED_LOCATION ${gst_root_dir}/libglib-2.0.so)
-set_target_properties(gobject PROPERTIES IMPORTED_LOCATION ${gst_root_dir}/libgobject-2.0.so)
-
-add_executable(gstreamerExample main.cpp
-        src/common/Logger.cpp src/common/Logger.h
-        src/common/Timestamp.cpp src/common/Timestamp.h
-        src/stream/GstreamerPusherRtmp.cpp src/stream/GstreamerPusherRtmp.h)
-
-target_link_libraries(gstreamerExample gstreamer gst_base glib gobject)
+if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(gstreamerExample gstreamer gst_base glib gobject)
+elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+#    target_link_libraries(gstreamerExample)
+endif ()
