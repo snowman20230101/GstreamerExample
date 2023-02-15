@@ -1,9 +1,11 @@
 #include <iostream>
-
 #include <gst/gst.h>
 
-#define FILE_NAME "/home/wuwenbin/hanggai_lunhui.mp4"
+#include "GstreamerPusherRtmp.h"
 
+#define VIDEO_FILE_264 "/home/wuwenbin/hanggai.264"
+
+#define AUDIO_FILE_OGG "/home/wuwenbin/test.ogg"
 
 /**
  * 错误一
@@ -17,7 +19,13 @@
  */
 
 
-
+/**
+ * 创建 element
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int create_element(int argc, char *argv[]) {
     GstElement *element;
     gst_init(&argc, &argv);
@@ -36,6 +44,13 @@ int create_element(int argc, char *argv[]) {
     return 0;
 }
 
+/**
+ * 定义工厂创建element
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int create_element_by_factory(int argc, char *argv[]) {
     GstElementFactory *factory;
     GstElement *element;
@@ -57,25 +72,39 @@ int create_element_by_factory(int argc, char *argv[]) {
     return 0;
 }
 
+/**
+ * 测试 gst 工厂 category
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int test_factory_plugin_category(int argc, char *argv[]) {
     GstElementFactory *factory;
     gst_init(&argc, &argv);
     factory = gst_element_factory_find("audiotestsrc");
     if (!factory) {
-        g_print ("You don't have the 'audiotestsrc' element installed!\n");
+        g_print("You don't have the 'audiotestsrc' element installed!\n");
         return -1;
     }
 
     /* display information */
-    g_print ("The '%s' element is a member of the category %s.\n"
-             "Description: %s\n",
-             gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(factory)),
-             gst_element_factory_get_klass(factory),
-             gst_element_factory_get_description(factory));
+    g_print("The '%s' element is a member of the category %s.\n"
+            "Description: %s\n",
+            gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(factory)),
+            gst_element_factory_get_klass(factory),
+            gst_element_factory_get_description(factory));
 
     return 0;
 }
 
+/**
+ * 测试 连接 element
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int test_link_elements(int argc, char *argv[]) {
     GstElement *pipeline;
     GstElement *source, *filter, *sink;
@@ -119,15 +148,22 @@ int test_link_elements(int argc, char *argv[]) {
  * @param pad
  * @param data
  */
-static void cb_new_pad(GstElement *element, GstPad *pad, gpointer data) {
+static void cb_created_pad(GstElement *element, GstPad *pad, gpointer data) {
     gchar *name;
     name = gst_pad_get_name(pad);
     g_print("A new pad %s was created.\n", name);
     g_free(name);
 }
 
+static void cb_removed_pad(GstElement *element, GstPad *pad, gpointer data) {
+    gchar *name;
+    name = gst_pad_get_name(pad);
+    g_print("A pad %s was removed.\n", name);
+    g_free(name);
+}
+
 /**
- * pad test
+ * test sometimes pad
  *
  * @param argc
  * @param argv
@@ -147,7 +183,7 @@ int test_sometimes_pad(int argc, char *argv[]) {
     if (!source) {
         g_print("source == null \n");
     }
-    g_object_set(source, "location" , std::string(FILE_NAME).c_str() , NULL);
+    g_object_set(source, "location", std::string(AUDIO_FILE_OGG).c_str(), NULL);
 
     demux = gst_element_factory_make("oggdemux", "demuxer");
     if (!demux) {
@@ -159,7 +195,9 @@ int test_sometimes_pad(int argc, char *argv[]) {
     gst_element_link_pads(source, "src", demux, "sink");
 
     // listen for newly created pads.
-    g_signal_connect(demux, "pad-added", G_CALLBACK(cb_new_pad), NULL);
+    g_signal_connect(demux, "pad-added", G_CALLBACK(cb_created_pad), NULL);
+
+    g_signal_connect(demux, "pad-removed", G_CALLBACK(cb_removed_pad), NULL);
 
     // start the pipeline
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
@@ -172,14 +210,12 @@ int test_sometimes_pad(int argc, char *argv[]) {
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
     auto loop = static_cast<GMainLoop *>(data);
     switch (GST_MESSAGE_TYPE(msg)) {
-        case GST_MESSAGE_EOS:
-        {
+        case GST_MESSAGE_EOS: {
             g_print("End-of-stream\n");
             g_main_loop_quit(loop);
             break;
         }
-        case GST_MESSAGE_ERROR:
-        {
+        case GST_MESSAGE_ERROR: {
             gchar *debug;
             GError *err;
             gst_message_parse_error(msg, &err, &debug);
@@ -198,16 +234,22 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
 
 GstElement *decoder;
 
-#include <gst/gstelement.h>
 static void new_pad(GstElement *element, GstPad *pad, gpointer data) {
     GstPad *sinkpad;
     g_print("Dynamic pad created, linking parser/decoder\n");
 //    sinkpad = gst_element_get_pad(decoder, "sink");
-    sinkpad = gst_element_get_request_pad(decoder, "sink");
+    sinkpad = gst_element_get_static_pad(decoder, "sink");
     gst_pad_link(pad, sinkpad);
     gst_object_unref(sinkpad);
 }
 
+/**
+ * Hello World 测试
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int test_hello_world(int argc, char *argv[]) {
     GMainLoop *loop;
     GstBus *bus;
@@ -246,14 +288,14 @@ int test_hello_world(int argc, char *argv[]) {
     }
 
     /* set filename property on the file source. Also add a message handler. */
-    g_object_set(G_OBJECT(source), "location", std::string(FILE_NAME).c_str(), NULL);
+    g_object_set(G_OBJECT(source), "location", std::string(AUDIO_FILE_OGG).c_str(), NULL);
 
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, bus_call, loop);
     gst_object_unref(bus);
 
     /* put all elements in a bin */
-    // bin是一个大的逻辑组
+    // bin是一个大的逻辑组 相距
     gst_bin_add_many(GST_BIN(pipeline), source, parser, decoder, conv, sink, NULL);
     /**
      * link together - note that we cannot link the parser and
@@ -271,18 +313,18 @@ int test_hello_world(int argc, char *argv[]) {
     g_main_loop_run(loop);
 
     /* clean up nicely */
-    g_print ("Returned, stopping playback\n");
+    g_print("Returned, stopping playback\n");
     gst_element_set_state(pipeline, GST_STATE_NULL);
-    g_print ("Deleting pipeline\n");
+    g_print("Deleting pipeline\n");
 
     gst_object_unref(GST_OBJECT(pipeline));
     return 0;
 }
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello, World!" << std::endl;
-    const char * gst_version = gst_version_string();
-    printf("gst version is %s\n", gst_version);
+    std::cout << "Hello, Gstreamer !" << std::endl;
+    const char *gst_version = gst_version_string();
+    printf("gstreamer version is %s\n", gst_version);
 
 //    create_element(argc, argv);
 //
@@ -295,6 +337,8 @@ int main(int argc, char *argv[]) {
 //    test_sometimes_pad(argc, argv);
 
     test_hello_world(argc, argv);
+//    auto rtmp = new GstreamerPusherRtmp();
+//    rtmp->main_push(0, std::string(VIDEO_FILE_264));
 
     return 0;
 }
