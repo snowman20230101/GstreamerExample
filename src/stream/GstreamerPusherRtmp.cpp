@@ -5,8 +5,6 @@
 #include <cstdio>
 #include "GstreamerPusherRtmp.h"
 
-#include <sys/socket.h>
-
 int GstreamerPusherRtmp::main_push(int argc, const std::string &filename) {
     frame_width = 1280;
     frame_height = 720;

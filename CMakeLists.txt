@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(
         src/common
         src/stream
+        src/basictutorials
 )
 
 # linux 平台
@@ -20,7 +21,7 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     # 将第三方库作为动态库引用
     add_library(gstreamer SHARED IMPORTED)
     add_library(gst_base SHARED IMPORTED)
-    add_library(glib SHARED IMPORTED)
+    add_library(glib SHARED IMPORTED src/basictutorials/basic-tutorial-3.cpp src/basictutorials/basic-tutorial-3.h)
     add_library(gobject SHARED IMPORTED)
 
     #指定第三方库的绝对路径
@@ -29,7 +30,7 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(glib PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libglib-2.0.so)
     set_target_properties(gobject PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgobject-2.0.so)
 
-# mac 平台
+    # mac 平台
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     set(gstreamer_dir /usr/local/Cellar/gstreamer/1.18.5)
     set(glib_dir /usr/local/Cellar/glib/2.70.4)
@@ -57,7 +58,11 @@ endif ()
 add_executable(gstreamerExample main.cpp
         src/common/Logger.cpp src/common/Logger.h
         src/common/Timestamp.cpp src/common/Timestamp.h
-        src/stream/GstreamerPusherRtmp.cpp src/stream/GstreamerPusherRtmp.h)
+        src/stream/GstreamerPusherRtmp.cpp src/stream/GstreamerPusherRtmp.h
+        src/stream/GstreamerPlayRtsp.cpp src/stream/GstreamerPlayRtsp.h
+        src/basictutorials/basic-tutorial-3.cpp src/basictutorials/basic-tutorial-3.h
+        src/basictutorials/basic-test.cpp src/basictutorials/basic-test.h
+        src/common/gst-def.h)
 
 message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME} ")
 message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM} ")
@@ -71,5 +76,5 @@ message("CMAKE_HOST_WIN32: ${CMAKE_HOST_WIN32} ")
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries(gstreamerExample gstreamer gst_base glib gobject)
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
-#    target_link_libraries(gstreamerExample)
+    #    target_link_libraries(gstreamerExample)
 endif ()
