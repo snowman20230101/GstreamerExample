@@ -4,7 +4,7 @@
 
 #include <gst/gst.h>
 
-int main(int argc, char *argv[]) {
+int basic_tutorial_7_main(int argc, char *argv[]) {
     GstElement *pipeline, *audio_source, *tee, *audio_queue, *audio_convert, *audio_resample, *audio_sink;
     GstElement *video_queue, *visual, *video_convert, *video_sink;
     GstBus *bus;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
     /* Configure elements */
     g_object_set(audio_source, "freq", 215.0f, NULL);
-    g_object_set(visual, "shader", 0, "style", 1, NULL);
+    g_object_set(visual, "shader", 0, "style", 3, NULL);
 
     /* Link all elements that can be automatically linked because they have "Always" pads */
     gst_bin_add_many(GST_BIN (pipeline), audio_source, tee, audio_queue, audio_convert, audio_resample, audio_sink,
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
     /* Wait until error or EOS */
     bus = gst_element_get_bus(pipeline);
-    msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, (GstMessageType)(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
+    msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, (GstMessageType) (GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
 
     /* Release the request pads from the Tee, and unref them */
     gst_element_release_request_pad(tee, tee_audio_pad);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     gst_object_unref(tee_video_pad);
 
     /* Free resources */
-    if (msg != NULL)
+    if (msg != nullptr)
         gst_message_unref(msg);
     gst_object_unref(bus);
     gst_element_set_state(pipeline, GST_STATE_NULL);

@@ -2,32 +2,14 @@
 // Created by wuwenbin on 2/17/23.
 //
 
-#include <gst/gst.h>
-#include <gst/audio/audio.h>
+#include "basic-tutorial-8.h"
 #include <cstring>
-
-#define CHUNK_SIZE 1024   /* Amount of bytes we are sending in each buffer */
-#define SAMPLE_RATE 44100 /* Samples per second we are sending */
-
-/* Structure to contain all our information, so we can pass it to callbacks */
-typedef struct _CustomData {
-    GstElement *pipeline, *app_source, *tee, *audio_queue, *audio_convert1, *audio_resample, *audio_sink;
-    GstElement *video_queue, *audio_convert2, *visual, *video_convert, *video_sink;
-    GstElement *app_queue, *app_sink;
-
-    guint64 num_samples;   /* Number of samples generated so far (for timestamp generation) */
-    gfloat a, b, c, d;     /* For waveform generation */
-
-    guint sourceid;        /* To control the GSource */
-
-    GMainLoop *main_loop;  /* GLib's Main Loop */
-} CustomData;
 
 /* This method is called by the idle GSource in the mainloop, to feed CHUNK_SIZE bytes into appsrc.
  * The ide handler is added to the mainloop when appsrc requests us to start sending data (need-data signal)
  * and is removed when appsrc has enough data (enough-data signal).
  */
-static gboolean push_data(CustomData *data) {
+static gboolean push_data(custom_data_8 *data) {
     GstBuffer *buffer;
     GstFlowReturn ret;
     int i;
@@ -71,41 +53,55 @@ static gboolean push_data(CustomData *data) {
     return TRUE;
 }
 
-/* This signal callback triggers when appsrc needs data. Here, we add an idle handler
- * to the mainloop to start pushing data into the appsrc */
-static void start_feed(GstElement *source, guint size, CustomData *data) {
+/**
+ * This signal callback triggers when appsrc needs data. Here, we add an idle handler
+ * to the mainloop to start pushing data into the appsrc
+ *
+ * @param source
+ * @param size
+ * @param data
+ */
+static void start_feed(GstElement *source, guint size, custom_data_8 *data) {
     if (data->sourceid == 0) {
-        g_print("Start feeding\n");
+        g_print("\nStart feeding\n");
         data->sourceid = g_idle_add((GSourceFunc) push_data, data);
     }
 }
 
-/* This callback triggers when appsrc has enough data and we can stop sending.
- * We remove the idle handler from the mainloop */
-static void stop_feed(GstElement *source, CustomData *data) {
+/**
+ * This callback triggers when appsrc has enough data and we can stop sending.
+ * We remove the idle handler from the mainloop
+ *
+ * @param source
+ * @param data
+ */
+static void stop_feed(GstElement *source, custom_data_8 *data) {
     if (data->sourceid != 0) {
-        g_print("Stop feeding\n");
+        g_print("\n Stop feeding\n");
         g_source_remove(data->sourceid);
         data->sourceid = 0;
     }
 }
 
 /* The appsink has received a buffer */
-static void new_sample(GstElement *sink, CustomData *data) {
+static GstFlowReturn new_sample(GstElement *sink, custom_data_8 *data) {
     GstSample *sample;
 
     /* Retrieve the buffer */
     g_signal_emit_by_name(sink, "pull-sample", &sample);
     if (sample) {
         /* The only thing we do in this example is print a * to indicate a received buffer */
-        g_print("*");
-//        gst_buffer_unref(sample);
-        // TODO 泄露
+        g_print("* pts:%ld \n", gst_sample_get_buffer(sample)->pts);
+        g_print("* * * dts:%ld \n", gst_sample_get_buffer(sample)->dts);
+        gst_sample_unref(sample);
+        return GST_FLOW_OK;
     }
+
+    return GST_FLOW_ERROR;
 }
 
 /* This function is called when an error message is posted on the bus */
-static void error_cb(GstBus *bus, GstMessage *msg, CustomData *data) {
+static void error_cb(GstBus *bus, GstMessage *msg, custom_data_8 *data) {
     GError *err;
     gchar *debug_info;
 
@@ -119,8 +115,8 @@ static void error_cb(GstBus *bus, GstMessage *msg, CustomData *data) {
     g_main_loop_quit(data->main_loop);
 }
 
-int main(int argc, char *argv[]) {
-    CustomData data;
+int basic_tutorial_8_main(int argc, char *argv[]) {
+    custom_data_8 data;
     GstPad *tee_audio_pad, *tee_video_pad, *tee_app_pad;
     GstPad *queue_audio_pad, *queue_video_pad, *queue_app_pad;
     GstAudioInfo info;
@@ -164,8 +160,7 @@ int main(int argc, char *argv[]) {
     g_object_set(data.visual, "shader", 0, "style", 0, NULL);
 
     /* Configure appsrc */
-    gst_audio_info_set_format(&info, GST_AUDIO_FORMAT_S16, SAMPLE_RATE, 1, NULL);
-//    audio_caps_text = g_strdup_printf (AUDIO_CAPS, SAMPLE_RATE);
+    gst_audio_info_set_format(&info, GST_AUDIO_FORMAT_S16, SAMPLE_RATE, 1, nullptr);
     audio_caps = gst_audio_info_to_caps(&info);
     g_object_set(data.app_source, "caps", audio_caps, "format", GST_FORMAT_TIME, NULL);
     g_signal_connect (data.app_source, "need-data", G_CALLBACK(start_feed), &data);
@@ -175,14 +170,12 @@ int main(int argc, char *argv[]) {
     g_object_set(data.app_sink, "emit-signals", TRUE, "caps", audio_caps, NULL);
     g_signal_connect (data.app_sink, "new-sample", G_CALLBACK(new_sample), &data);
     gst_caps_unref(audio_caps);
-//    g_free(audio_caps_text);
 
     /* Link all elements that can be automatically linked because they have "Always" pads */
     gst_bin_add_many(GST_BIN (data.pipeline), data.app_source, data.tee, data.audio_queue, data.audio_convert1,
-                     data.audio_resample,
-                     data.audio_sink, data.video_queue, data.audio_convert2, data.visual, data.video_convert,
-                     data.video_sink, data.app_queue,
-                     data.app_sink, NULL);
+                     data.audio_resample, data.audio_sink, data.video_queue, data.audio_convert2, data.visual,
+                     data.video_convert,
+                     data.video_sink, data.app_queue, data.app_sink, NULL);
     if (gst_element_link_many(data.app_source, data.tee, NULL) != TRUE ||
         gst_element_link_many(data.audio_queue, data.audio_convert1, data.audio_resample, data.audio_sink, NULL) !=
         TRUE ||
@@ -225,7 +218,7 @@ int main(int argc, char *argv[]) {
     gst_element_set_state(data.pipeline, GST_STATE_PLAYING);
 
     /* Create a GLib Main Loop and set it to run */
-    data.main_loop = g_main_loop_new(NULL, FALSE);
+    data.main_loop = g_main_loop_new(nullptr, FALSE);
     g_main_loop_run(data.main_loop);
 
     /* Release the request pads from the Tee, and unref them */

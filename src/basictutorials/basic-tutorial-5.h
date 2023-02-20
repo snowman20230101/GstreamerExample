@@ -16,6 +16,7 @@
 #if defined (GDK_WINDOWING_X11)
 
 #include <gdk/gdkx.h>
+#include <cairo/cairo.h>
 
 #elif defined (GDK_WINDOWING_WIN32)
 #include <gdk/gdkwin32.h>

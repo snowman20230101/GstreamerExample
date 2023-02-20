@@ -17,20 +17,21 @@ int basic_tutorial_3_main(int argc, char *argv[]) {
     /* Create the elements */
     data.source = gst_element_factory_make("uridecodebin", "source");
     data.convert = gst_element_factory_make("audioconvert", "convert");
+    data.resample = gst_element_factory_make("audioresample", "resample");
     data.sink = gst_element_factory_make("autoaudiosink", "sink");
 
     /* Create the empty pipeline */
     data.pipeline = gst_pipeline_new("basic-tutorial-3-pipeline");
 
-    if (!data.pipeline || !data.source || !data.convert || !data.sink) {
+    if (!data.pipeline || !data.source || !data.convert || !data.resample || !data.sink) {
         g_printerr("Not all elements could be created.\n");
         return -1;
     }
 
     /* Build the pipeline. Note that we are NOT linking the source at this
      * point. We will do it later. */
-    gst_bin_add_many(GST_BIN (data.pipeline), data.source, data.convert, data.sink, NULL);
-    if (!gst_element_link(data.convert, data.sink)) {
+    gst_bin_add_many(GST_BIN (data.pipeline), data.source, data.convert, data.resample, data.sink, NULL);
+    if (!gst_element_link_many(data.convert, data.resample, data.sink, NULL)) {
         g_printerr("Elements could not be linked.\n");
         gst_object_unref(data.pipeline);
         return -1;
@@ -59,7 +60,7 @@ int basic_tutorial_3_main(int argc, char *argv[]) {
                                                            GST_MESSAGE_EOS));
 
         /* Parse message */
-        if (msg != NULL) {
+        if (msg != nullptr) {
             GError *err;
             gchar *debug_info;
 
@@ -105,9 +106,9 @@ int basic_tutorial_3_main(int argc, char *argv[]) {
 static void basic_tutorial_3_pad_added_handler(GstElement *src, GstPad *new_pad, CustomData *data) {
     GstPad *sink_pad = gst_element_get_static_pad(data->convert, "sink");
     GstPadLinkReturn ret;
-    GstCaps *new_pad_caps = NULL;
-    GstStructure *new_pad_struct = NULL;
-    const gchar *new_pad_type = NULL;
+    GstCaps *new_pad_caps = nullptr;
+    GstStructure *new_pad_struct;
+    const gchar *new_pad_type;
 
     g_print("Received new pad '%s' from '%s':\n", GST_PAD_NAME (new_pad), GST_ELEMENT_NAME (src));
 
@@ -136,7 +137,7 @@ static void basic_tutorial_3_pad_added_handler(GstElement *src, GstPad *new_pad,
 
     exit:
     /* Unreference the new pad's caps, if we got them */
-    if (new_pad_caps != NULL)
+    if (new_pad_caps != nullptr)
         gst_caps_unref(new_pad_caps);
 
     /* Unreference the sink pad */

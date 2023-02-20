@@ -4,6 +4,7 @@
 
 #include "basic-tutorial-5.h"
 
+#if 1
 
 /* This function is called when the GUI toolkit creates the physical window that will hold the video.
  * At this point we can retrieve its handler (which has a different meaning depending on the windowing system)
@@ -361,3 +362,5 @@ static void tags_cb(GstElement *playbin, gint stream, custom_data_5 *data) {
                              gst_message_new_application(GST_OBJECT (playbin),
                                                          gst_structure_new_empty("tags-changed")));
 }
+
+#endif

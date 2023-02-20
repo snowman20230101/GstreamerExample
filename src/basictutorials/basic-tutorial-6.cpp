@@ -16,7 +16,7 @@ static gboolean print_field(GQuark field, const GValue *value, gpointer pfx) {
 static void print_caps(const GstCaps *caps, const gchar *pfx) {
     guint i;
 
-    g_return_if_fail (caps != NULL);
+    g_return_if_fail (caps != nullptr);
 
     if (gst_caps_is_any(caps)) {
         g_print("%sANY\n", pfx);
@@ -82,8 +82,8 @@ static void print_pad_templates_information(GstElementFactory *factory) {
 
 /* Shows the CURRENT capabilities of the requested pad in the given element */
 static void print_pad_capabilities(GstElement *element, gchar *pad_name) {
-    GstPad *pad = NULL;
-    GstCaps *caps = NULL;
+    GstPad *pad = nullptr;
+    GstCaps *caps = nullptr;
 
     /* Retrieve pad */
     pad = gst_element_get_static_pad(element, pad_name);
@@ -95,7 +95,7 @@ static void print_pad_capabilities(GstElement *element, gchar *pad_name) {
     /* Retrieve negotiated caps (or acceptable caps if negotiation is not finished yet) */
     caps = gst_pad_get_current_caps(pad);
     if (!caps)
-        caps = gst_pad_query_caps(pad, NULL);
+        caps = gst_pad_query_caps(pad, nullptr);
 
     /* Print and free */
     g_print("Caps for the %s pad:\n", pad_name);
@@ -104,7 +104,7 @@ static void print_pad_capabilities(GstElement *element, gchar *pad_name) {
     gst_object_unref(pad);
 }
 
-int main(int argc, char *argv[]) {
+int basic_tutorial_6_main(int argc, char *argv[]) {
     GstElement *pipeline, *source, *sink;
     GstElementFactory *source_factory, *sink_factory;
     GstBus *bus;
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
                                                            GST_MESSAGE_STATE_CHANGED));
 
         /* Parse message */
-        if (msg != NULL) {
+        if (msg != nullptr) {
             GError *err;
             gchar *debug_info;
 

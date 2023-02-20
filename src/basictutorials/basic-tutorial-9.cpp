@@ -26,7 +26,7 @@ static void print_tag_foreach(const GstTagList *tags, const gchar *tag, gpointer
 
 /* Print information regarding a stream */
 static void print_stream_info(GstDiscovererStreamInfo *info, gint depth) {
-    gchar *desc = NULL;
+    gchar *desc = nullptr;
     GstCaps *caps;
     const GstTagList *tags;
 
@@ -44,7 +44,7 @@ static void print_stream_info(GstDiscovererStreamInfo *info, gint depth) {
 
     if (desc) {
         g_free(desc);
-        desc = NULL;
+        desc = nullptr;
     }
 
     tags = gst_discoverer_stream_info_get_tags(info);
@@ -161,7 +161,7 @@ static void on_finished_cb(GstDiscoverer *discoverer, custom_data_9 *data) {
 int basic_tutorial_9_main(int argc, char **argv) {
     custom_data_9 data;
     GError *err = nullptr;
-    gchar *uri = TEST_URI;
+    gchar *uri = TEST_URI_FILE;
 
     /* if a URI was provided, use it instead of the default one */
     if (argc > 1) {
@@ -192,7 +192,8 @@ int basic_tutorial_9_main(int argc, char **argv) {
     gst_discoverer_start(data.discoverer);
 
     /* Add a request to process asynchronously the URI passed through the command line */
-    if (!gst_discoverer_discover_uri_async(data.discoverer, uri)) {
+    if (!gst_discoverer_discover_uri_async(data.discoverer,
+                                           "file:///home/wuwenbin/sintel_trailer-480p.webm")) {
         g_print("Failed to start discovering URI '%s'\n", uri);
         g_object_unref(data.discoverer);
         return -1;

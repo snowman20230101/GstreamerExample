@@ -12,11 +12,12 @@ typedef struct {
     GstElement *pipeline;
     GstElement *source;
     GstElement *convert;
+    GstElement *resample;
     GstElement *sink;
 } CustomData;
 
 /* basic tutorial 3 demo main */
-int basic_tutorial_3_main(int argc, char *argv[]);
+extern "C" int basic_tutorial_3_main(int argc, char *argv[]);
 
 /* Handler for the pad-added signal */
 static void basic_tutorial_3_pad_added_handler(GstElement *src, GstPad *new_pad, CustomData *data);

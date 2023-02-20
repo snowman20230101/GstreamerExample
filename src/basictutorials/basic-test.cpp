@@ -169,7 +169,7 @@ int test_sometimes_pad(int argc, char *argv[]) {
 
     // start the pipeline
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
-    loop = g_main_loop_new(NULL, FALSE);
+    loop = g_main_loop_new(nullptr, FALSE);
     g_print("now start looper....\n");
     g_main_loop_run(loop);
     gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
@@ -203,7 +203,7 @@ int test_hello_world(int argc, char *argv[]) {
     GMainLoop *loop;
     GstBus *bus;
     gst_init(&argc, &argv);
-    loop = g_main_loop_new(NULL, FALSE);
+    loop = g_main_loop_new(nullptr, FALSE);
 
     GstElement *pipeline, *source, *parser, *decoder, *conv, *sink;
     pipeline = gst_pipeline_new("audio-player-pipeline");
@@ -280,7 +280,7 @@ static gboolean hello_world_bus_call_handle(GstBus *bus, GstMessage *msg, gpoint
     g_print("                 Pipeline state changed from %s to %s:\n",
             gst_element_state_get_name(old_state), gst_element_state_get_name(new_state));
 
-    GMainLoop *loop = (GMainLoop *) (data);
+    auto *loop = (GMainLoop *) (data);
     switch (GST_MESSAGE_TYPE(msg)) {
         case GST_MESSAGE_EOS: {
             g_print("End-of-stream\n");
@@ -305,7 +305,7 @@ static gboolean hello_world_bus_call_handle(GstBus *bus, GstMessage *msg, gpoint
 
 static void hello_world_pad_added_handle(GstElement *element, GstPad *new_pad, gpointer data) {
     GstPad *sinkpad;
-    GstElement *p_decoder = (GstElement *) data;
+    auto *p_decoder = (GstElement *) data;
     g_print("Dynamic pad created, linking parser/decoder\n");
     sinkpad = gst_element_get_static_pad(p_decoder, "sink");
     gst_pad_link(new_pad, sinkpad);
