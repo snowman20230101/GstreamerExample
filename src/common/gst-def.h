@@ -12,7 +12,8 @@
 
 #define VIDEO_FILE_264 "/home/wuwenbin/hanggai.264"
 
-#define AUDIO_FILE_OGG "/home/wuwenbin/test.ogg"
+//#define AUDIO_FILE_OGG "/home/wuwenbin/test.ogg"
+#define AUDIO_FILE_OGG "/Users/windy/devlop/208/audio.ogg"
 
 #define TEST_URI_FILE "/home/wuwenbin/sintel_trailer-480p.webm"
 

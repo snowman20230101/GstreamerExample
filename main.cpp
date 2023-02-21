@@ -2,7 +2,7 @@
 #include <gst/gst.h>
 #include <cairo.h>
 
-//#include "basic-test.h"
+#include "basic-test.h"
 #include "basic-tutorial-1.h"
 #include "basic-tutorial-2.h"
 #include <basic-tutorial-3.h>
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
 //    test_sometimes_pad(argc, argv);
 
-//    test_hello_world(argc, argv);
+    test_hello_world(argc, argv);
 
 //    basic_tutorial_1_main(argc, argv);
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 
 //    play_back_tutorial_1_main(argc, argv);
 
-    play_back_tutorial_2_main(argc, argv);
+//    play_back_tutorial_2_main(argc, argv);
 
     return 0;
 }

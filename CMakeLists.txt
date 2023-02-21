@@ -65,26 +65,82 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
 
     # mac 平台
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    # gstreamer
     set(gstreamer_dir /usr/local/Cellar/gstreamer/1.18.5)
+    set(gst_plugins_base_dir /usr/local/Cellar/gst-plugins-base/1.18.5)
+    set(gst_plugins_good_dir /usr/local/Cellar/gst-plugins-good/1.18.5)
+    set(gst_plugins_bad_dir /usr/local/Cellar/gst-plugins-bad/1.18.5)
+    # glib
     set(glib_dir /usr/local/Cellar/glib/2.70.4)
+    # cairo
+    set(cairo_dir /usr/local/Cellar/cairo/1.16.0_5)
+    # gtk
+    set(gtk_dir /usr/local/Cellar/gtk+3/3.24.31)
+    # pango
+    set(pango_dir /usr/local/Cellar/pango/1.50.4)
+    # atk
+    set(atk_dir /usr/local/Cellar/atk/2.36.0)
+    # harfbuzz
+    set(harfbuzz_dir /usr/local/Cellar/harfbuzz/3.4.0)
+    # gdk-pixbuf-2.0
+    set(gdk_pixbuf_dir /usr/local/Cellar/gdk-pixbuf/2.42.6)
+
     include_directories(
+            # gstreamer
             ${gstreamer_dir}/include/gstreamer-1.0
+            # gst base
+            ${gst_plugins_base_dir}/include/gstreamer-1.0
+            ${gst_plugins_bad_dir}/include/gstreamer-1.0
+            # glib
             ${glib_dir}/include/glib-2.0
             ${glib_dir}/include/gio-unix-2.0
+            # cairo
+            ${cairo_dir}/include/cairo
+            # gtk
+            ${gtk_dir}/include/gtk-3.0
+            ${gtk_dir}/include/gail-3.0
+            # pango
+            ${pango_dir}/include/pango-1.0
+            # atk
+            ${atk_dir}/include/atk-1.0
+            # harfbuzz
+            ${harfbuzz_dir}/include/harfbuzz
+            # gdk-pixbuf-2.0
+            ${gdk_pixbuf_dir}/include/gdk-pixbuf-2.0
     )
 
     # gstreamer 需要这种模式
     link_libraries(
+            # gstreamer
             ${gstreamer_dir}/lib/libgstreamer-1.0.0.dylib
             ${gstreamer_dir}/lib/libgstnet-1.0.0.dylib
             ${gstreamer_dir}/lib/libgstcontroller-1.0.0.dylib
             ${gstreamer_dir}/lib/libgstcheck-1.0.0.dylib
             ${gstreamer_dir}/lib/libgstbase-1.0.0.dylib
+            # gst base
+            ${gst_plugins_base_dir}/lib/libgstvideo-1.0.dylib
+            ${gst_plugins_base_dir}/lib/libgstaudio-1.0.dylib
+            ${gst_plugins_base_dir}/lib/libgstpbutils-1.0.dylib
+            # glib
             ${glib_dir}/lib/libglib-2.0.0.dylib
             ${glib_dir}/lib/libgobject-2.0.dylib
             ${glib_dir}/lib/libgio-2.0.dylib
             ${glib_dir}/lib/libgmodule-2.0.dylib
             ${glib_dir}/lib/libgthread-2.0.dylib
+            # cairo
+            ${cairo_dir}/lib/libcairo.dylib
+            # gtk gdk
+            ${gtk_dir}/lib/libgailutil-3.dylib
+            ${gtk_dir}/lib/libgdk-3.dylib
+            ${gtk_dir}/lib/libgtk-3.dylib
+            # pango
+            ${pango_dir}/lib/libpango-1.0.dylib
+            # atk
+            ${atk_dir}/lib/libatk-1.0.dylib
+            # harfbuzz
+            ${harfbuzz_dir}/lib/libharfbuzz.dylib
+            # gdk-pixbuf-2.0
+            ${gdk_pixbuf_dir}/lib/libgdk_pixbuf-2.0.dylib
     )
 endif ()
 
@@ -109,16 +165,15 @@ add_executable(
         src/basictutorials/basic-tutorial-13.h src/basictutorials/basic-tutorial-13.cpp
         src/stream/gstreamer-play-rtsp-demo.h src/stream/gstreamer-play-rtsp-demo.cpp
         src/playbacktutorials/playback-tutorial-2.h src/playbacktutorials/playback-tutorial-2.cpp
-        src/playbacktutorials/playback-tutorial-1.h src/playbacktutorials/playback-tutorial-3.h src/playbacktutorials/playback-tutorial-4.h src/playbacktutorials/playback-tutorial-5.h src/playbacktutorials/playback-tutorial-6.h src/playbacktutorials/playback-tutorial-7.h src/playbacktutorials/playback-tutorial-8.h src/playbacktutorials/playback-tutorial-9.h src/playbacktutorials/playback-tutorial-9.cpp src/playbacktutorials/playback-tutorial-8.cpp src/playbacktutorials/playback-tutorial-7.cpp src/playbacktutorials/playback-tutorial-6.cpp src/playbacktutorials/playback-tutorial-5.cpp src/playbacktutorials/playback-tutorial-4.cpp src/playbacktutorials/playback-tutorial-3.cpp src/playbacktutorials/playback-tutorial-1.cpp)
-
-message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME} ")
-message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM} ")
-
-message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME} ")
-message("CMAKE_SYSTEM: ${CMAKE_SYSTEM} ")
-
-message("CMAKE_HOST_UNIX: ${CMAKE_HOST_UNIX} ")
-message("CMAKE_HOST_WIN32: ${CMAKE_HOST_WIN32} ")
+        src/playbacktutorials/playback-tutorial-1.h src/playbacktutorials/playback-tutorial-3.h
+        src/playbacktutorials/playback-tutorial-4.h src/playbacktutorials/playback-tutorial-5.h
+        src/playbacktutorials/playback-tutorial-6.h src/playbacktutorials/playback-tutorial-7.h
+        src/playbacktutorials/playback-tutorial-8.h src/playbacktutorials/playback-tutorial-9.h
+        src/playbacktutorials/playback-tutorial-9.cpp src/playbacktutorials/playback-tutorial-8.cpp
+        src/playbacktutorials/playback-tutorial-7.cpp src/playbacktutorials/playback-tutorial-6.cpp
+        src/playbacktutorials/playback-tutorial-5.cpp src/playbacktutorials/playback-tutorial-4.cpp
+        src/playbacktutorials/playback-tutorial-3.cpp src/playbacktutorials/playback-tutorial-1.cpp
+)
 
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries(
@@ -141,3 +196,12 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     #    target_link_libraries(gstreamerExample)
 endif ()
+
+message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME} ")
+message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM} ")
+
+message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME} ")
+message("CMAKE_SYSTEM: ${CMAKE_SYSTEM} ")
+
+message("CMAKE_HOST_UNIX: ${CMAKE_HOST_UNIX} ")
+message("CMAKE_HOST_WIN32: ${CMAKE_HOST_WIN32} ")
