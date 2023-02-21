@@ -7,6 +7,7 @@ include_directories(
         src/common
         src/stream
         src/basictutorials
+        src/playbacktutorials
 )
 
 # linux 平台
@@ -95,7 +96,9 @@ add_executable(
         src/stream/GstreamerPusherRtmp.cpp src/stream/GstreamerPusherRtmp.h
         src/stream/GstreamerPlayRtsp.cpp src/stream/GstreamerPlayRtsp.h
         src/basictutorials/basic-test.cpp src/basictutorials/basic-test.h
-        src/basictutorials/basic-tutorial-3.cpp src/basictutorials/basic-tutorial-3.h
+        src/basictutorials/basic-tutorial-1.h src/basictutorials/basic-tutorial-1.cpp
+        src/basictutorials/basic-tutorial-2.h src/basictutorials/basic-tutorial-2.cpp
+        src/basictutorials/basic-tutorial-3.h src/basictutorials/basic-tutorial-3.cpp
         src/basictutorials/basic-tutorial-4.h src/basictutorials/basic-tutorial-4.cpp
         src/basictutorials/basic-tutorial-5.h src/basictutorials/basic-tutorial-5.cpp
         src/basictutorials/basic-tutorial-6.h src/basictutorials/basic-tutorial-6.cpp
@@ -103,7 +106,10 @@ add_executable(
         src/basictutorials/basic-tutorial-8.h src/basictutorials/basic-tutorial-8.cpp
         src/basictutorials/basic-tutorial-9.h src/basictutorials/basic-tutorial-9.cpp
         src/basictutorials/basic-tutorial-12.h src/basictutorials/basic-tutorial-12.cpp
-        src/basictutorials/basic-tutorial-13.h src/basictutorials/basic-tutorial-13.cpp src/basictutorials/basic-tutorial-2.h src/basictutorials/basic-tutorial-2.cpp src/basictutorials/basic-tutorial-1.h src/basictutorials/basic-tutorial-1.cpp)
+        src/basictutorials/basic-tutorial-13.h src/basictutorials/basic-tutorial-13.cpp
+        src/stream/gstreamer-play-rtsp-demo.h src/stream/gstreamer-play-rtsp-demo.cpp
+        src/playbacktutorials/playback-tutorial-2.h src/playbacktutorials/playback-tutorial-2.cpp
+        src/playbacktutorials/playback-tutorial-1.h src/playbacktutorials/playback-tutorial-3.h src/playbacktutorials/playback-tutorial-4.h src/playbacktutorials/playback-tutorial-5.h src/playbacktutorials/playback-tutorial-6.h src/playbacktutorials/playback-tutorial-7.h src/playbacktutorials/playback-tutorial-8.h src/playbacktutorials/playback-tutorial-9.h src/playbacktutorials/playback-tutorial-9.cpp src/playbacktutorials/playback-tutorial-8.cpp src/playbacktutorials/playback-tutorial-7.cpp src/playbacktutorials/playback-tutorial-6.cpp src/playbacktutorials/playback-tutorial-5.cpp src/playbacktutorials/playback-tutorial-4.cpp src/playbacktutorials/playback-tutorial-3.cpp src/playbacktutorials/playback-tutorial-1.cpp)
 
 message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME} ")
 message("CMAKE_HOST_SYSTEM: ${CMAKE_HOST_SYSTEM} ")

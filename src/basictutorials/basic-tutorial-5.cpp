@@ -45,7 +45,7 @@ static void stop_cb(GtkButton *button, custom_data_5 *data) {
 
 /* This function is called when the main window is closed */
 static void delete_event_cb(GtkWidget *widget, GdkEvent *event, custom_data_5 *data) {
-    stop_cb(NULL, data);
+    stop_cb(nullptr, data);
     gtk_main_quit();
 }
 
@@ -178,7 +178,7 @@ static void analyze_streams(custom_data_5 *data) {
     g_object_get(data->playbin, "n-text", &n_text, NULL);
 
     for (i = 0; i < n_video; i++) {
-        tags = NULL;
+        tags = nullptr;
         /* Retrieve the stream's video tags */
         g_signal_emit_by_name(data->playbin, "get-video-tags", i, &tags);
         if (tags) {
@@ -195,7 +195,7 @@ static void analyze_streams(custom_data_5 *data) {
     }
 
     for (i = 0; i < n_audio; i++) {
-        tags = NULL;
+        tags = nullptr;
         /* Retrieve the stream's audio tags */
         g_signal_emit_by_name(data->playbin, "get-audio-tags", i, &tags);
         if (tags) {
@@ -224,7 +224,7 @@ static void analyze_streams(custom_data_5 *data) {
     }
 
     for (i = 0; i < n_text; i++) {
-        tags = NULL;
+        tags = nullptr;
         /* Retrieve the stream's subtitle tags */
         g_signal_emit_by_name(data->playbin, "get-text-tags", i, &tags);
         if (tags) {
@@ -241,6 +241,8 @@ static void analyze_streams(custom_data_5 *data) {
         }
     }
 }
+
+#include "gst-def.h"
 
 int basic_tutorial_5_main(int argc, char *argv[]) {
     custom_data_5 data;
@@ -266,8 +268,7 @@ int basic_tutorial_5_main(int argc, char *argv[]) {
     }
 
     /* Set the URI to play */
-    g_object_set(data.playbin, "uri",
-                 "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm", NULL);
+    g_object_set(data.playbin, "uri", TEST_FILE_HANGGAI, NULL);
 
     /* Connect to interesting signals in playbin */
     g_signal_connect (G_OBJECT(data.playbin), "video-tags-changed", (GCallback) tags_cb, &data);

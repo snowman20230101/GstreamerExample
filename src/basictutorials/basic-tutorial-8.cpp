@@ -134,15 +134,21 @@ int basic_tutorial_8_main(int argc, char *argv[]) {
     /* Create the elements */
     data.app_source = gst_element_factory_make("appsrc", "audio_source");
     data.tee = gst_element_factory_make("tee", "tee");
+
+    // 音频
     data.audio_queue = gst_element_factory_make("queue", "audio_queue");
     data.audio_convert1 = gst_element_factory_make("audioconvert", "audio_convert1");
     data.audio_resample = gst_element_factory_make("audioresample", "audio_resample");
     data.audio_sink = gst_element_factory_make("autoaudiosink", "audio_sink");
+
+    // 视频
     data.video_queue = gst_element_factory_make("queue", "video_queue");
     data.audio_convert2 = gst_element_factory_make("audioconvert", "audio_convert2");
     data.visual = gst_element_factory_make("wavescope", "visual");
     data.video_convert = gst_element_factory_make("videoconvert", "csp");
     data.video_sink = gst_element_factory_make("autovideosink", "video_sink");
+
+    // app
     data.app_queue = gst_element_factory_make("queue", "app_queue");
     data.app_sink = gst_element_factory_make("appsink", "app_sink");
 
@@ -156,10 +162,10 @@ int basic_tutorial_8_main(int argc, char *argv[]) {
         return -1;
     }
 
-    /* Configure wavescope */
+    /// Configure wavescope 设置 shader
     g_object_set(data.visual, "shader", 0, "style", 0, NULL);
 
-    /* Configure appsrc */
+    /// Configure appsrc
     gst_audio_info_set_format(&info, GST_AUDIO_FORMAT_S16, SAMPLE_RATE, 1, nullptr);
     audio_caps = gst_audio_info_to_caps(&info);
     g_object_set(data.app_source, "caps", audio_caps, "format", GST_FORMAT_TIME, NULL);
@@ -172,7 +178,7 @@ int basic_tutorial_8_main(int argc, char *argv[]) {
     gst_caps_unref(audio_caps);
 
     /* Link all elements that can be automatically linked because they have "Always" pads */
-    gst_bin_add_many(GST_BIN (data.pipeline), data.app_source, data.tee, data.audio_queue, data.audio_convert1,
+    gst_bin_add_many(GST_BIN(data.pipeline), data.app_source, data.tee, data.audio_queue, data.audio_convert1,
                      data.audio_resample, data.audio_sink, data.video_queue, data.audio_convert2, data.visual,
                      data.video_convert,
                      data.video_sink, data.app_queue, data.app_sink, NULL);
@@ -189,13 +195,13 @@ int basic_tutorial_8_main(int argc, char *argv[]) {
 
     /* Manually link the Tee, which has "Request" pads */
     tee_audio_pad = gst_element_get_request_pad(data.tee, "src_%u");
-    g_print("Obtained request pad %s for audio branch.\n", gst_pad_get_name (tee_audio_pad));
+    g_print("Obtained request pad %s for audio branch.\n", gst_pad_get_name(tee_audio_pad));
     queue_audio_pad = gst_element_get_static_pad(data.audio_queue, "sink");
     tee_video_pad = gst_element_get_request_pad(data.tee, "src_%u");
-    g_print("Obtained request pad %s for video branch.\n", gst_pad_get_name (tee_video_pad));
+    g_print("Obtained request pad %s for video branch.\n", gst_pad_get_name(tee_video_pad));
     queue_video_pad = gst_element_get_static_pad(data.video_queue, "sink");
     tee_app_pad = gst_element_get_request_pad(data.tee, "src_%u");
-    g_print("Obtained request pad %s for app branch.\n", gst_pad_get_name (tee_app_pad));
+    g_print("Obtained request pad %s for app branch.\n", gst_pad_get_name(tee_app_pad));
     queue_app_pad = gst_element_get_static_pad(data.app_queue, "sink");
     if (gst_pad_link(tee_audio_pad, queue_audio_pad) != GST_PAD_LINK_OK ||
         gst_pad_link(tee_video_pad, queue_video_pad) != GST_PAD_LINK_OK ||

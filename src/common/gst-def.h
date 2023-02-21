@@ -5,8 +5,10 @@
 #ifndef GSTREAMEREXAMPLE_GST_DEF_H
 #define GSTREAMEREXAMPLE_GST_DEF_H
 
-
 #include <string>
+
+/// this is a test media url
+// TODO https://gstreamer.freedesktop.org/media
 
 #define VIDEO_FILE_264 "/home/wuwenbin/hanggai.264"
 

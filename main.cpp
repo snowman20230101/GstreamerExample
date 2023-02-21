@@ -15,6 +15,11 @@
 #include "basic-tutorial-12.h"
 #include "basic-tutorial-13.h"
 
+#include "gstreamer-play-rtsp-demo.h"
+
+#include "playback-tutorial-1.h"
+#include "playback-tutorial-2.h"
+
 int main(int argc, char *argv[]) {
     std::cout << "Hello, Gstreamer !" << std::endl;
     const char *gst_version = gst_version_string();
@@ -48,13 +53,19 @@ int main(int argc, char *argv[]) {
 
 //    basic_tutorial_7_main(argc, argv);
 
-    basic_tutorial_8_main(argc, argv);
+//    basic_tutorial_8_main(argc, argv);
 
 //    basic_tutorial_9_main(argc, argv);
 
 //    basic_tutorial_12_main(argc, argv);
 
 //    basic_tutorial_13_main(argc, argv);
+
+//    play_rtsp_main(argc, argv);
+
+//    play_back_tutorial_1_main(argc, argv);
+
+    play_back_tutorial_2_main(argc, argv);
 
     return 0;
 }
