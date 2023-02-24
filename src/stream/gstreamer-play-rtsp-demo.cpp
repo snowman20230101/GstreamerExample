@@ -3,9 +3,7 @@
 //
 
 #include "gstreamer-play-rtsp-demo.h"
-
 #include <gst/gst.h>
-
 
 int play_rtsp_main(int argc, char *argv[]) {
     custom_data_play_rtsp data;
@@ -135,12 +133,19 @@ static void pad_added_handler(GstElement *src, GstPad *new_pad, custom_data_play
         goto exit;
     }
 
-    /* Check the new pad's type */
     new_pad_caps = gst_pad_get_current_caps(new_pad);
     new_pad_struct = gst_caps_get_structure(new_pad_caps, 0);
     new_pad_type = gst_structure_get_name(new_pad_struct);
 
-    /* Attempt the link */
+    // 因为 rtph264depay 要求application/x-rtp 格式的输入数据，所以找 rtspsrc 的pad里面有没有这种格式的数据
+    if (!g_str_has_prefix(new_pad_type, "application/x-rtp")) {
+        g_print("source not application/x-rtp type Caps\n");
+        goto exit;
+    }
+
+    new_pad_struct = gst_caps_get_structure(new_pad_caps, 0);
+    new_pad_type = gst_structure_get_name(new_pad_struct);
+
     ret = gst_pad_link(new_pad, sink_pad);
     if (GST_PAD_LINK_FAILED(ret)) {
         g_print("Type is '%s' but link failed.\n", new_pad_type);
@@ -149,10 +154,8 @@ static void pad_added_handler(GstElement *src, GstPad *new_pad, custom_data_play
     }
 
     exit:
-    /* Unreference the new pad's caps, if we got them */
     if (new_pad_caps != nullptr)
         gst_caps_unref(new_pad_caps);
 
-    /* Unreference the sink pad */
     gst_object_unref(sink_pad);
 }

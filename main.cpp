@@ -16,6 +16,7 @@
 #include "basic-tutorial-13.h"
 
 #include "gstreamer-play-rtsp-demo.h"
+#include "gstreamer-save-file-demo.h"
 
 #include "playback-tutorial-1.h"
 #include "playback-tutorial-2.h"
@@ -37,7 +38,7 @@ int main(int argc, char *argv[]) {
 
 //    test_sometimes_pad(argc, argv);
 
-    test_hello_world(argc, argv);
+//    test_hello_world(argc, argv);
 
 //    basic_tutorial_1_main(argc, argv);
 
@@ -62,6 +63,8 @@ int main(int argc, char *argv[]) {
 //    basic_tutorial_13_main(argc, argv);
 
 //    play_rtsp_main(argc, argv);
+
+    save_file_main(argc, argv);
 
 //    play_back_tutorial_1_main(argc, argv);
 

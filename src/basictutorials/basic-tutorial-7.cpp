@@ -39,14 +39,46 @@ int basic_tutorial_7_main(int argc, char *argv[]) {
     /* Configure elements */
     g_object_set(audio_source, "freq", 215.0f, NULL);
     g_object_set(visual, "shader", 0, "style", 3, NULL);
-
     /* Link all elements that can be automatically linked because they have "Always" pads */
-    gst_bin_add_many(GST_BIN (pipeline), audio_source, tee, audio_queue, audio_convert, audio_resample, audio_sink,
+    gst_bin_add_many(GST_BIN(pipeline), audio_source, tee, audio_queue, audio_convert, audio_resample, audio_sink,
                      video_queue, visual, video_convert, video_sink, NULL);
-    if (gst_element_link_many(audio_source, tee, NULL) != TRUE ||
-        gst_element_link_many(audio_queue, audio_convert, audio_resample, audio_sink, NULL) != TRUE ||
-        gst_element_link_many(video_queue, visual, video_convert, video_sink, NULL) != TRUE) {
-        g_printerr("Elements could not be linked.\n");
+
+    /// link src to tee
+    if (!gst_element_link_many(audio_source, tee, NULL)) {
+        g_printerr("Failed to linked tee element. \n");
+        gst_object_unref(pipeline);
+    }
+
+    /// link audio element
+    if (!gst_element_link_many(audio_queue, audio_convert, audio_resample, audio_sink, NULL)) {
+        g_printerr("Failed to linked audio elements. \n");
+        gst_object_unref(pipeline);
+    }
+
+    /// 连接 视频
+    if (!gst_element_link(video_queue, visual)) {
+        g_printerr("video_queue could not link visual\n");
+        gst_object_unref(pipeline);
+        return -1;
+    }
+
+    // TODO You need to add elements to a pipeline/bin before linking them.
+    GstCaps *new_caps = gst_caps_new_simple("video/x-raw",
+                                            "width", G_TYPE_INT, 960,
+                                            "height", G_TYPE_INT, 640,
+                                            NULL
+    );
+
+    /// link element and add filter
+    if (!gst_element_link_filtered(visual, video_convert, new_caps)) {
+        g_warning("Failed to link element1 and element2!");
+        gst_caps_unref(new_caps);
+        gst_object_unref(pipeline);
+    }
+    gst_caps_unref(new_caps);
+
+    if (!gst_element_link(video_convert, video_sink)) {
+        g_printerr("video_convert could not link video_sink\n");
         gst_object_unref(pipeline);
         return -1;
     }

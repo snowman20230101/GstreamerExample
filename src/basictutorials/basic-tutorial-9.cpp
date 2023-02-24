@@ -161,20 +161,9 @@ static void on_finished_cb(GstDiscoverer *discoverer, custom_data_9 *data) {
 int basic_tutorial_9_main(int argc, char **argv) {
     custom_data_9 data;
     GError *err = nullptr;
-    gchar *uri = TEST_URI_FILE;
-
-    /* if a URI was provided, use it instead of the default one */
-    if (argc > 1) {
-        uri = argv[1];
-    }
-
-    /* Initialize cumstom data structure */
     memset(&data, 0, sizeof(data));
 
-    /* Initialize GStreamer */
     gst_init(&argc, &argv);
-
-    g_print("Discovering '%s'\n", uri);
 
     /* Instantiate the Discoverer */
     data.discoverer = gst_discoverer_new(5 * GST_SECOND, &err);
@@ -194,7 +183,7 @@ int basic_tutorial_9_main(int argc, char **argv) {
     /* Add a request to process asynchronously the URI passed through the command line */
     if (!gst_discoverer_discover_uri_async(data.discoverer,
                                            "file:///home/wuwenbin/sintel_trailer-480p.webm")) {
-        g_print("Failed to start discovering URI '%s'\n", uri);
+        g_print("Failed to start discovering\n");
         g_object_unref(data.discoverer);
         return -1;
     }

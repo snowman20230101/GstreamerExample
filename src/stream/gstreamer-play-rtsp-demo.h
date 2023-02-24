@@ -27,7 +27,7 @@ typedef struct custom_data_play_rtsp_ {
  * @param pad
  * @param data
  */
-static void pad_added_handler(GstElement *src, GstPad *pad, custom_data_play_rtsp *data);
+static void pad_added_handler(GstElement *src, GstPad *new_pad, custom_data_play_rtsp *data);
 
 int play_rtsp_main(int argc, char *argv[]);
 

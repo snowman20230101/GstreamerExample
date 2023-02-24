@@ -135,7 +135,7 @@ static gboolean refresh_ui(custom_data_5 *data) {
 
     /* We do not want to update anything unless we are in the PAUSED or PLAYING states */
     if (data->state < GST_STATE_PAUSED)
-        return TRUE;
+        return FALSE;
 
     /* If we didn't know it yet, query the stream duration */
     if (!GST_CLOCK_TIME_IS_VALID (data->duration)) {
