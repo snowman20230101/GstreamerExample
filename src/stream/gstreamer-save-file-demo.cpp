@@ -137,7 +137,7 @@ int save_file_main(int argc, char *argv[]) {
 //        return -1;
 //    }
 
-    if (gst_pad_link_full(parse_src_pad, mp4_video_pad, GST_PAD_LINK_CHECK_CAPS) != GST_PAD_LINK_OK) {
+    if (gst_pad_link_full(parse_src_pad, mp4_video_pad, GST_PAD_LINK_CHECK_TEMPLATE_CAPS) != GST_PAD_LINK_OK) {
         g_printerr("%d mp4mux pad could not be linked.\n", __LINE__);
         gst_object_unref(data.pipeline);
         return -1;
