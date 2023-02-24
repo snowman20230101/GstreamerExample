@@ -24,7 +24,7 @@ int play_back_tutorial_1_main(int argc, char *argv[]) {
     }
 
     /* Set the URI to play */
-    g_object_set(data.playbin, "uri", TEST_FILE_URI, NULL);
+    g_object_set(data.playbin, "uri", getWebmFile().c_str(), NULL);
 
     /* Set flags to show Audio and Video but ignore Subtitles */
     g_object_get(data.playbin, "flags", &flags, NULL);

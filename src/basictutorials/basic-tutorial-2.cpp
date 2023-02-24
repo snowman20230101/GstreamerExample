@@ -7,7 +7,7 @@
 GST_DEBUG_CATEGORY_STATIC (my_category);
 #define GST_CAT_DEFAULT my_category
 
-int tutorial_main_2(int argc, char *argv[]) {
+int basic_tutorial_2_main(int argc, char *argv[]) {
     GstElement *pipeline, *source, *sink;
     GstBus *bus;
     GstMessage *msg;
@@ -29,13 +29,21 @@ int tutorial_main_2(int argc, char *argv[]) {
         return -1;
     }
 
+    GstCaps *src_new_caps = gst_caps_new_simple("video/x-raw",
+                                                "width", G_TYPE_INT, 1280,
+                                                "height", G_TYPE_INT, 720,
+                                                NULL
+    );
+
     /* Build the pipeline */
     gst_bin_add_many(GST_BIN (pipeline), source, sink, NULL);
-    if (gst_element_link(source, sink) != TRUE) {
+    if (gst_element_link_filtered(source, sink, src_new_caps) != TRUE) {
         g_printerr("Elements could not be linked.\n");
         gst_object_unref(pipeline);
         return -1;
     }
+
+    gst_caps_unref(src_new_caps);
 
     /* Modify the source's properties */
     g_object_set(source, "pattern", 0, NULL);
@@ -84,12 +92,4 @@ int tutorial_main_2(int argc, char *argv[]) {
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(pipeline);
     return 0;
-}
-
-int basic_tutorial_2_main(int argc, char *argv[]) {
-//#if defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-//    return gst_macos_main (tutorial_main, argc, argv, NULL);
-//#else
-    return tutorial_main_2(argc, argv);
-//#endif
 }

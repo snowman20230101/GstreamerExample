@@ -21,7 +21,7 @@ int basic_tutorial_12_main(int argc, char *argv[]) {
 
 
     std::string uri("playbin uri=");
-    uri.append(TEST_FILE_HANGGAI);
+    uri.append(getMp4File());
 
     g_print("uri:%s\n", uri.c_str());
 

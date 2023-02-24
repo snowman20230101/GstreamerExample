@@ -3,6 +3,7 @@
 //
 
 #include "gstreamer-save-file-demo.h"
+#include "gst-def.h"
 
 #define IS_H264 0
 
@@ -21,7 +22,7 @@ int save_file_main(int argc, char *argv[]) {
 
     data.source = gst_element_factory_make("rtspsrc", "source");
     g_object_set(G_OBJECT (data.source), "latency", 2000, NULL);
-    g_object_set(G_OBJECT (data.source), "location", "rtsp://192.168.56.129:8554/hanggai.264", NULL);
+    g_object_set(G_OBJECT (data.source), "location", TEST_URI_264_LOCAL, NULL);
     g_signal_connect (data.source, "pad-added", G_CALLBACK(save_h264_source_pad_added_handler), &data);
 
     data.depay = gst_element_factory_make("rtph264depay", "depay");

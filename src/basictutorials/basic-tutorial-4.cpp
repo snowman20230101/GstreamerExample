@@ -29,7 +29,7 @@ int basic_tutorial_4_main(int argc, char *argv[]) {
     }
 
     /* Set the URI to play */
-    g_object_set(data.playbin, "uri", TEST_URI, NULL);
+    g_object_set(data.playbin, "uri", getMp4File().c_str(), NULL);
 
     /* Start playing */
     ret = gst_element_set_state(data.playbin, GST_STATE_PLAYING);

@@ -150,7 +150,7 @@ int test_sometimes_pad(int argc, char *argv[]) {
     if (!source) {
         g_print("source == null \n");
     }
-    const char *fileName = AUDIO_FILE_OGG;
+    const char *fileName = TEST_FILE_OGG;
     g_object_set(source, "location", fileName, NULL);
 
     demux = gst_element_factory_make("oggdemux", "demuxer");
@@ -237,7 +237,7 @@ int test_hello_world(int argc, char *argv[]) {
     }
 
     /* set filename property on the file source. Also add a message handler. */
-    g_object_set(G_OBJECT(source), "location", AUDIO_FILE_OGG, NULL);
+    g_object_set(G_OBJECT(source), "location", TEST_FILE_OGG, NULL);
 
     bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_bus_add_watch(bus, hello_world_bus_call_handle, loop);

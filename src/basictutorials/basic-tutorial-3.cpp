@@ -3,6 +3,7 @@
 //
 
 #include "basic-tutorial-3.h"
+#include "gst-def.h"
 
 int basic_tutorial_3_main(int argc, char *argv[]) {
     CustomData data;
@@ -38,8 +39,7 @@ int basic_tutorial_3_main(int argc, char *argv[]) {
     }
 
     /* Set the URI to play */
-    g_object_set(data.source, "uri",
-                 "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm", NULL);
+    g_object_set(data.source, "uri", getMp4File().c_str(), NULL);
 
     /* Connect to the pad-added signal */
     g_signal_connect (data.source, "pad-added", G_CALLBACK(basic_tutorial_3_pad_added_handler), &data);

@@ -181,8 +181,7 @@ int basic_tutorial_9_main(int argc, char **argv) {
     gst_discoverer_start(data.discoverer);
 
     /* Add a request to process asynchronously the URI passed through the command line */
-    if (!gst_discoverer_discover_uri_async(data.discoverer,
-                                           "file:///home/wuwenbin/sintel_trailer-480p.webm")) {
+    if (!gst_discoverer_discover_uri_async(data.discoverer, getWebmFile().c_str())) {
         g_print("Failed to start discovering\n");
         g_object_unref(data.discoverer);
         return -1;

@@ -2,7 +2,7 @@
 // Created by wuwenbin on 2/17/23.
 //
 
-#include <gst/gst.h>
+#include "basic-tutorial-7.h"
 
 int basic_tutorial_7_main(int argc, char *argv[]) {
     GstElement *pipeline, *audio_source, *tee, *audio_queue, *audio_convert, *audio_resample, *audio_sink;

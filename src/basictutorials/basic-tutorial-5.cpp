@@ -268,7 +268,7 @@ int basic_tutorial_5_main(int argc, char *argv[]) {
     }
 
     /* Set the URI to play */
-    g_object_set(data.playbin, "uri", TEST_FILE_HANGGAI, NULL);
+    g_object_set(data.playbin, "uri", getMp4File().c_str(), NULL);
 
     /* Connect to interesting signals in playbin */
     g_signal_connect (G_OBJECT(data.playbin), "video-tags-changed", (GCallback) tags_cb, &data);

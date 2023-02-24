@@ -91,7 +91,7 @@ static gboolean handle_keyboard(GIOChannel *source, GIOCondition cond, custom_da
     return TRUE;
 }
 
-int tutorial_main(int argc, char *argv[]) {
+int basic_tutorial_13_main(int argc, char *argv[]) {
     custom_data_13 data;
     GstStateChangeReturn ret;
     GIOChannel *io_stdin;
@@ -111,7 +111,8 @@ int tutorial_main(int argc, char *argv[]) {
             " 'Q' to quit\n");
 
     /* Build the pipeline */
-    data.pipeline = gst_parse_launch(getHangGai().c_str(), nullptr);
+    std::string uri = "playbin uri=" + getMp4File();
+    data.pipeline = gst_parse_launch(uri.c_str(), nullptr);
 
     /* Add a keyboard watch so we get notified of keystrokes */
 #ifdef G_OS_WIN32
@@ -143,12 +144,4 @@ int tutorial_main(int argc, char *argv[]) {
         gst_object_unref(data.video_sink);
     gst_object_unref(data.pipeline);
     return 0;
-}
-
-int basic_tutorial_13_main(int argc, char *argv[]) {
-//#if defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-//    return gst_macos_main (tutorial_main, argc, argv, NULL);
-//#else
-    return tutorial_main(argc, argv);
-//#endif
 }

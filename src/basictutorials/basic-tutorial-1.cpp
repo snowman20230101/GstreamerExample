@@ -5,7 +5,7 @@
 #include "basic-tutorial-1.h"
 #include "gst-def.h"
 
-int tutorial_main_1(int argc, char *argv[]) {
+int basic_tutorial_1_main(int argc, char *argv[]) {
     GstElement *pipeline;
     GstBus *bus;
     GstMessage *msg;
@@ -14,7 +14,8 @@ int tutorial_main_1(int argc, char *argv[]) {
     gst_init(&argc, &argv);
 
     /* Build the pipeline */
-    pipeline = gst_parse_launch(getHangGai().c_str(), nullptr);
+    std::string uri = "playbin uri=" + getMp4File();
+    pipeline = gst_parse_launch(uri.c_str(), nullptr);
 
     /* Start playing */
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
@@ -36,12 +37,4 @@ int tutorial_main_1(int argc, char *argv[]) {
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(pipeline);
     return 0;
-}
-
-int basic_tutorial_1_main(int argc, char *argv[]) {
-//#if defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-//    return gst_macos_main (tutorial_main, argc, argv, NULL);
-//#else
-    return tutorial_main_1(argc, argv);
-//#endif
 }

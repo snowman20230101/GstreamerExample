@@ -10,24 +10,34 @@
 /// this is a test media url
 // TODO https://gstreamer.freedesktop.org/media
 
-#define VIDEO_FILE_264 "/home/wuwenbin/hanggai.264"
+#if defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+#else
+/// rtsp
+#define TEST_URI_264 "rtsp://101.43.184.19:554/test.264"
+#define TEST_URI_MKV "rtsp://101.43.184.19:554/hanggai_lunhui.mkv"
+#define TEST_URI_AAC "rtsp://101.43.184.19:554/hanggai-lunhui.aac"
+#define TEST_URI_WEBM "rtsp://101.43.184.19:554/sintel_trailer-480p.webm"
+#define TEST_URI_OGV "rtsp://101.43.184.19:554/sintel_trailer-480p.ogv" // ffplay play failed.
 
-//#define AUDIO_FILE_OGG "/home/wuwenbin/test.ogg"
-#define AUDIO_FILE_OGG "/Users/windy/devlop/208/audio.ogg"
+#define TEST_URI_264_LOCAL "rtsp://192.168.56.129:8554/hanggai.264"
 
-#define TEST_URI_FILE "/home/wuwenbin/sintel_trailer-480p.webm"
+/// local file
+#define TEST_FILE_H264 "/home/wuwenbn/test.h264"
+#define TEST_FILE_OGG "/home/wuwenbin/test.ogg"
+#define TEST_FILE_WEBM "/home/wuwenbin/sintel_trailer-480p.webm"
+#define TEST_FILE_MP4 "/home/wuwenbin/hanggai_lunhui.mp4"
+#endif
 
-#define TEST_URI "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm"
-
-#define TEST_FILE_URI "file:///home/wuwenbin/sintel_trailer-480p.webm"
-
-#define TEST_FILE_HANGGAI "file:///home/wuwenbin/hanggai_lunhui.mp4"
-
-static std::string getHangGai() {
-    std::string uri("playbin uri=");
-    uri.append(TEST_FILE_HANGGAI);
+static std::string getMp4File() {
+    std::string uri("file://");
+    uri.append(TEST_FILE_MP4);
     return uri;
 }
 
+static std::string getWebmFile() {
+    std::string uri("file://");
+    uri.append(TEST_FILE_WEBM);
+    return uri;
+}
 
 #endif //GSTREAMEREXAMPLE_GST_DEF_H
