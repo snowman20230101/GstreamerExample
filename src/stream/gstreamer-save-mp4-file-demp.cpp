@@ -1,13 +1,13 @@
 //
-// Created by wuwenbin on 2/22/23.
-// https://trac.ffmpeg.org/wiki/Concatenate
-// rtsp流数据存储为h264谁
+// Created by windy on 2023/2/25.
+// rtsp流保存为mp4文件。
 //
 
-#include "gstreamer-save-file-demo.h"
+#include "gstreamer-save-mp4-file-demp.h"
 #include "gst-def.h"
 
-int save_file_main(int argc, char *argv[]) {
+
+int save_file_mp4_main(int argc, char *argv[]) {
     custom_data_save_file data;
 
     GstBus *bus;
@@ -15,50 +15,45 @@ int save_file_main(int argc, char *argv[]) {
     GstStateChangeReturn ret;
     gboolean terminate = FALSE;
 
-    /* Initialize GStreamer */
     gst_init(&argc, &argv);
 
     data.source = gst_element_factory_make("rtspsrc", "source");
     g_object_set(G_OBJECT (data.source), "latency", 2000, NULL);
     g_object_set(G_OBJECT (data.source), "location", TEST_URI_264, NULL);
-    g_signal_connect (data.source, "pad-added", G_CALLBACK(save_h264_source_pad_added_handler), &data);
+    g_signal_connect (data.source, "pad-added", G_CALLBACK(save_mp4_source_pad_added_handler), &data);
 
     data.depay = gst_element_factory_make("rtph264depay", "depay");
     data.parse = gst_element_factory_make("h264parse", "parse");
     g_object_set(G_OBJECT(data.parse), "config-interval", -1, NULL); // TODO sps pps 要加入在每一gop中
 
+    data.decoder = gst_element_factory_make("avdec_h264", "decoder");
+    data.videoConvert = gst_element_factory_make("videoconvert", "convert");
+    data.encoder = gst_element_factory_make("x264enc", "encoder");
+
+    GstElementFactory *gstElementFactory = gst_element_factory_find("mp4mux");
+    data.mp4mux = gst_element_factory_create(gstElementFactory, "mp4-mux");
+
     data.sink = gst_element_factory_make("filesink", "sink");
-    g_object_set(G_OBJECT(data.sink), "location", "/home/wuwenbin/save.mp4", NULL);
+    g_object_set(G_OBJECT(data.sink), "location", "/Users/windy/devlop/208/test/save.mp4", NULL);
     g_object_set(G_OBJECT (data.sink), "sync", FALSE, NULL);
 
     data.pipeline = gst_pipeline_new("save-file-pipeline");
 
-    if (!data.pipeline || !data.source || !data.depay || !data.parse || !data.sink) {
+    if (!data.pipeline || !data.source || !data.depay || !data.parse ||
+        !data.decoder || !data.videoConvert || !data.encoder || !data.mp4mux || !data.sink) {
         g_printerr("Not all elements could be created.\n");
         return -1;
     }
 
-    gst_bin_add_many(GST_BIN(data.pipeline), data.source, data.depay, data.parse, data.sink, NULL);
+    gst_bin_add_many(GST_BIN(data.pipeline), data.source, data.depay,
+                     data.parse, data.decoder, data.videoConvert, data.encoder, data.mp4mux, data.sink, NULL);
 
-    if (!gst_element_link_many(data.depay, data.parse, NULL)) {
+    if (!gst_element_link_many(data.depay, data.parse, data.decoder,
+                               data.videoConvert, data.encoder, data.mp4mux, data.sink, NULL)) {
         g_printerr("Elements could not be linked.\n");
         gst_object_unref(data.pipeline);
         return -1;
     }
-
-    // TODO You need to add elements to a pipeline/bin before linking them.
-    GstCaps *new_caps = gst_caps_new_simple("video/x-h264",
-                                            "stream-format", G_TYPE_STRING, "byte-stream",
-                                            "parsed", G_TYPE_BOOLEAN, TRUE,
-                                            NULL
-    );
-
-    if (!gst_element_link_filtered(data.parse, data.sink, new_caps)) {
-        g_printerr("Element parse could not be linked to sink. \n");
-        gst_object_unref(data.pipeline);
-        return -1;
-    }
-    gst_caps_unref(new_caps);
 
     ret = gst_element_set_state(data.pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -118,7 +113,7 @@ int save_file_main(int argc, char *argv[]) {
     return 0;
 }
 
-static void save_h264_source_pad_added_handler(GstElement *src, GstPad *new_pad, custom_data_save_file *data) {
+static void save_mp4_source_pad_added_handler(GstElement *src, GstPad *new_pad, custom_data_save_file *data) {
     GstPad *sink_pad = gst_element_get_static_pad(data->depay, "sink");
     GstPadLinkReturn ret;
     GstCaps *new_pad_caps = nullptr;

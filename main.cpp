@@ -17,6 +17,7 @@
 
 #include "gstreamer-play-rtsp-demo.h"
 #include "gstreamer-save-file-demo.h"
+#include "gstreamer-save-mp4-file-demp.h"
 
 #include "playback-tutorial-1.h"
 #include "playback-tutorial-2.h"
@@ -64,7 +65,9 @@ int main(int argc, char *argv[]) {
 
 //    play_rtsp_main(argc, argv);
 
-    save_file_main(argc, argv);
+//    save_file_main(argc, argv);
+
+    save_file_mp4_main(argc, argv);
 
 //    play_back_tutorial_1_main(argc, argv);
 

@@ -174,7 +174,7 @@ add_executable(
         src/playbacktutorials/playback-tutorial-5.cpp src/playbacktutorials/playback-tutorial-4.cpp
         src/playbacktutorials/playback-tutorial-3.cpp src/playbacktutorials/playback-tutorial-1.cpp
         src/stream/gstreamer-save-file-demo.h src/stream/gstreamer-save-file-demo.cpp
-)
+        src/stream/gstreamer-save-mp4-file-demp.h src/stream/gstreamer-save-mp4-file-demp.cpp)
 
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries(

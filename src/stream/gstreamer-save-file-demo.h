@@ -12,8 +12,14 @@ typedef struct custom_data_save_file_ {
     GstElement *source;
     GstElement *depay;
     GstElement *parse;
+
+    GstElement *decoder;
+    GstElement *videoConvert;
+    GstElement *encoder;
+
     GstElement *mp4mux;
     GstElement *sink;
+
 } custom_data_save_file;
 
 int save_file_main(int argc, char *argv[]);
