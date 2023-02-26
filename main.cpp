@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
 //    basic_tutorial_9_main(argc, argv);
 
-//    basic_tutorial_12_main(argc, argv);
+    basic_tutorial_12_main(argc, argv);
 
 //    basic_tutorial_13_main(argc, argv);
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
 //    save_file_main(argc, argv);
 
-    save_file_mp4_main(argc, argv);
+//    save_file_mp4_main(argc, argv);
 
 //    play_back_tutorial_1_main(argc, argv);
 

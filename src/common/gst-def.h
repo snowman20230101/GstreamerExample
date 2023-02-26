@@ -20,7 +20,7 @@
 #define TEST_FILE_H264 "/home/wuwenbn/test.h264"
 #define TEST_FILE_OGG "/home/wuwenbin/test.ogg"
 #define TEST_FILE_WEBM "/home/wuwenbin/sintel_trailer-480p.webm"
-#define TEST_FILE_MP4 "/home/wuwenbin/hanggai_lunhui.mp4"
+#define TEST_FILE_MP4 "/Volumes/AospHD/TubeGet/video/hanggai_lunhui.mp4"
 #else
 
 #define TEST_URI_264_LOCAL "rtsp://192.168.56.129:8554/hanggai.264"
