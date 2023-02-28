@@ -16,7 +16,7 @@ static gboolean print_field(GQuark field, const GValue *value, gpointer pfx) {
 static void print_caps(const GstCaps *caps, const gchar *pfx) {
     guint i;
 
-    g_return_if_fail (caps != nullptr);
+    g_return_if_fail(caps != nullptr);
 
     if (gst_caps_is_any(caps)) {
         g_print("%sANY\n", pfx);
@@ -40,7 +40,7 @@ static void print_pad_templates_information(GstElementFactory *factory) {
     const GList *pads;
     GstStaticPadTemplate *padtemplate;
 
-    g_print("Pad Templates for %s:\n", gst_element_factory_get_longname (factory));
+    g_print("Pad Templates for %s:\n", gst_element_factory_get_longname(factory));
     if (!gst_element_factory_get_num_pad_templates(factory)) {
         g_print("  none\n");
         return;
@@ -49,7 +49,7 @@ static void print_pad_templates_information(GstElementFactory *factory) {
     pads = gst_element_factory_get_static_pad_templates(factory);
     while (pads) {
         padtemplate = static_cast<GstStaticPadTemplate *>(pads->data);
-        pads = g_list_next (pads);
+        pads = g_list_next(pads);
 
         if (padtemplate->direction == GST_PAD_SRC)
             g_print("  SRC template: '%s'\n", padtemplate->name_template);

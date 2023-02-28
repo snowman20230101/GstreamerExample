@@ -21,6 +21,7 @@
 
 #include "playback-tutorial-1.h"
 #include "playback-tutorial-2.h"
+#include "basic-encoder-h264.h"
 
 int main(int argc, char *argv[]) {
     std::cout << "Hello, Gstreamer !" << std::endl;
@@ -29,6 +30,9 @@ int main(int argc, char *argv[]) {
 
     const char *cairo_version = cairo_version_string();
     printf("cairo version is %s\n", cairo_version);
+
+    printf("x265 version is %s.\n", x265_version_str);
+
 //    create_element(argc, argv);
 
 //    create_element_by_factory(argc, argv);
@@ -57,9 +61,9 @@ int main(int argc, char *argv[]) {
 
 //    basic_tutorial_8_main(argc, argv);
 
-//    basic_tutorial_9_main(argc, argv);
+    basic_tutorial_9_main(argc, argv);
 
-    basic_tutorial_12_main(argc, argv);
+//    basic_tutorial_12_main(argc, argv);
 
 //    basic_tutorial_13_main(argc, argv);
 
@@ -72,6 +76,10 @@ int main(int argc, char *argv[]) {
 //    play_back_tutorial_1_main(argc, argv);
 
 //    play_back_tutorial_2_main(argc, argv);
+
+//    const char *srcFile = "/home/wuwenbin/video/test.yuv";
+//    const char *desFile = "abc.h265";
+//    encoder_h265_test(srcFile, desFile, 30);
 
     return 0;
 }

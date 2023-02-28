@@ -22,7 +22,7 @@ static void realize_cb(GtkWidget *widget, custom_data_5 *data) {
 #elif defined (GDK_WINDOWING_QUARTZ)
 //    window_handle = gdk_quartz_window_get_nsview (window);
 #elif defined (GDK_WINDOWING_X11)
-    window_handle = GDK_WINDOW_XID (window);
+    window_handle = GDK_WINDOW_XID(window);
 #endif
     /* Pass it to playbin, which implements VideoOverlay and will forward it to the video sink */
     gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY (data->playbin), window_handle);
@@ -138,12 +138,12 @@ static gboolean refresh_ui(custom_data_5 *data) {
         return FALSE;
 
     /* If we didn't know it yet, query the stream duration */
-    if (!GST_CLOCK_TIME_IS_VALID (data->duration)) {
+    if (!GST_CLOCK_TIME_IS_VALID(data->duration)) {
         if (!gst_element_query_duration(data->playbin, GST_FORMAT_TIME, &data->duration)) {
             g_printerr("Could not query current duration.\n");
         } else {
             /* Set the range of the slider to the clip duration, in SECONDS */
-            gtk_range_set_range(GTK_RANGE (data->slider), 0, (gdouble) data->duration / GST_SECOND);
+            gtk_range_set_range(GTK_RANGE(data->slider), 0, (gdouble) data->duration / GST_SECOND);
         }
     }
 
@@ -152,7 +152,7 @@ static gboolean refresh_ui(custom_data_5 *data) {
          * (which would trigger a seek the user has not requested) */
         g_signal_handler_block(data->slider, data->slider_update_signal_id);
         /* Set the position of the slider to the current pipeline positoin, in SECONDS */
-        gtk_range_set_value(GTK_RANGE (data->slider), (gdouble) current / GST_SECOND);
+        gtk_range_set_value(GTK_RANGE(data->slider), (gdouble) current / GST_SECOND);
         /* Re-enable the signal */
         g_signal_handler_unblock(data->slider, data->slider_update_signal_id);
     }
@@ -271,9 +271,9 @@ int basic_tutorial_5_main(int argc, char *argv[]) {
     g_object_set(data.playbin, "uri", getMp4File().c_str(), NULL);
 
     /* Connect to interesting signals in playbin */
-    g_signal_connect (G_OBJECT(data.playbin), "video-tags-changed", (GCallback) tags_cb, &data);
-    g_signal_connect (G_OBJECT(data.playbin), "audio-tags-changed", (GCallback) tags_cb, &data);
-    g_signal_connect (G_OBJECT(data.playbin), "text-tags-changed", (GCallback) tags_cb, &data);
+    g_signal_connect(G_OBJECT(data.playbin), "video-tags-changed", (GCallback) tags_cb, &data);
+    g_signal_connect(G_OBJECT(data.playbin), "audio-tags-changed", (GCallback) tags_cb, &data);
+    g_signal_connect(G_OBJECT(data.playbin), "text-tags-changed", (GCallback) tags_cb, &data);
 
     /* Create the GUI */
     create_ui(&data);
@@ -281,10 +281,10 @@ int basic_tutorial_5_main(int argc, char *argv[]) {
     /* Instruct the bus to emit signals for each received message, and connect to the interesting signals */
     bus = gst_element_get_bus(data.playbin);
     gst_bus_add_signal_watch(bus);
-    g_signal_connect (G_OBJECT(bus), "message::error", (GCallback) error_cb, &data);
-    g_signal_connect (G_OBJECT(bus), "message::eos", (GCallback) eos_cb, &data);
-    g_signal_connect (G_OBJECT(bus), "message::state-changed", (GCallback) state_changed_cb, &data);
-    g_signal_connect (G_OBJECT(bus), "message::application", (GCallback) application_cb, &data);
+    g_signal_connect(G_OBJECT(bus), "message::error", (GCallback) error_cb, &data);
+    g_signal_connect(G_OBJECT(bus), "message::eos", (GCallback) eos_cb, &data);
+    g_signal_connect(G_OBJECT(bus), "message::state-changed", (GCallback) state_changed_cb, &data);
+    g_signal_connect(G_OBJECT(bus), "message::application", (GCallback) application_cb, &data);
     gst_object_unref(bus);
 
     /* Start playing */

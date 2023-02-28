@@ -8,6 +8,7 @@
 #define GSTREAMEREXAMPLE_GST_DEF_H
 
 #include <string>
+#include <cstring>
 
 /// rtsp
 #define TEST_URI_264 "rtsp://101.43.184.19:554/test.264"
@@ -21,15 +22,20 @@
 #define TEST_FILE_OGG "/home/wuwenbin/test.ogg"
 #define TEST_FILE_WEBM "/home/wuwenbin/sintel_trailer-480p.webm"
 #define TEST_FILE_MP4 "/Volumes/AospHD/TubeGet/video/hanggai_lunhui.mp4"
+
+#define TEST_SAVE_FILE_MP4 "/home/wuwenbin/video/save_1.mp4"
 #else
 
 #define TEST_URI_264_LOCAL "rtsp://192.168.56.129:8554/hanggai.264"
 
 /// local file
-#define TEST_FILE_H264 "/home/wuwenbn/test.h264"
-#define TEST_FILE_OGG "/home/wuwenbin/test.ogg"
-#define TEST_FILE_WEBM "/home/wuwenbin/sintel_trailer-480p.webm"
-#define TEST_FILE_MP4 "/home/wuwenbin/hanggai_lunhui.mp4"
+#define TEST_FILE_H264 "/home/wuwenbn/video/test.h264"
+#define TEST_FILE_OGG "/home/wuwenbin/video/test.ogg"
+#define TEST_FILE_WEBM "/home/wuwenbin/video/sintel_trailer-480p.webm"
+#define TEST_FILE_MP4 "/home/wuwenbin/video/hanggai_lunhui.mp4"
+
+///
+#define TEST_SAVE_FILE_MP4 "/home/wuwenbin/video/save_1.mp4"
 #endif
 
 static std::string getMp4File() {

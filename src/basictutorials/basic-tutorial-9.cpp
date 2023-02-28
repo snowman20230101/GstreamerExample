@@ -66,11 +66,11 @@ static void print_topology(GstDiscovererStreamInfo *info, gint depth) {
     next = gst_discoverer_stream_info_get_next(info);
     if (next) {
         print_topology(next, depth + 1);
-        gst_discoverer_stream_info_unref (next);
-    } else if (GST_IS_DISCOVERER_CONTAINER_INFO (info)) {
+        gst_discoverer_stream_info_unref(next);
+    } else if (GST_IS_DISCOVERER_CONTAINER_INFO(info)) {
         GList *tmp, *streams;
 
-        streams = gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO (info));
+        streams = gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(info));
         for (tmp = streams; tmp; tmp = tmp->next) {
             auto *tmpinf = (GstDiscovererStreamInfo *) tmp->data;
             print_topology(tmpinf, depth + 1);
@@ -174,8 +174,8 @@ int basic_tutorial_9_main(int argc, char **argv) {
     }
 
     /* Connect to the interesting signals */
-    g_signal_connect (data.discoverer, "discovered", G_CALLBACK(on_discovered_cb), &data);
-    g_signal_connect (data.discoverer, "finished", G_CALLBACK(on_finished_cb), &data);
+    g_signal_connect(data.discoverer, "discovered", G_CALLBACK(on_discovered_cb), &data);
+    g_signal_connect(data.discoverer, "finished", G_CALLBACK(on_finished_cb), &data);
 
     /* Start the discoverer process (nothing to do yet) */
     gst_discoverer_start(data.discoverer);

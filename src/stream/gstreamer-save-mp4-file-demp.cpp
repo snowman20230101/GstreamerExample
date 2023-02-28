@@ -6,6 +6,7 @@
 #include "gstreamer-save-mp4-file-demp.h"
 #include "gst-def.h"
 
+// gst-launch-1.0 rtspsrc location=rtsp://192.168.56.129:8554/hanggai.264 ! rtph264depay ! h264parse ! avdec_h264 ! tee name=t ! queue leaky=1 ! videoconvert ! autovideosink sync=false t. ! queue !  x264enc ! filesink location=rtsp_test1.mp4
 
 int save_file_mp4_main(int argc, char *argv[]) {
     custom_data_save_file data;
@@ -34,8 +35,8 @@ int save_file_mp4_main(int argc, char *argv[]) {
     data.mp4mux = gst_element_factory_create(gstElementFactory, "mp4-mux");
 
     data.sink = gst_element_factory_make("filesink", "sink");
-    g_object_set(G_OBJECT(data.sink), "location", "/Users/windy/devlop/208/test/save.mp4", NULL);
-    g_object_set(G_OBJECT (data.sink), "sync", FALSE, NULL);
+    g_object_set(G_OBJECT(data.sink), "location", TEST_SAVE_FILE_MP4, NULL);
+    g_object_set(G_OBJECT(data.sink), "sync", FALSE, NULL);
 
     data.pipeline = gst_pipeline_new("save-file-pipeline");
 

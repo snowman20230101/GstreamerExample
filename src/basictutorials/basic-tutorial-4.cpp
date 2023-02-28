@@ -130,7 +130,7 @@ static void basic_tutorial_4_handle_message(custom_data_4 *data, GstMessage *msg
                         gst_query_parse_seeking(query, nullptr, &data->seek_enabled, &start, &end);
                         if (data->seek_enabled) {
                             g_print("Seeking is ENABLED from %" GST_TIME_FORMAT " to %" GST_TIME_FORMAT "\n",
-                                    GST_TIME_ARGS (start), GST_TIME_ARGS (end));
+                                    GST_TIME_ARGS(start), GST_TIME_ARGS(end));
                         } else {
                             g_print("Seeking is DISABLED for this stream.\n");
                         }

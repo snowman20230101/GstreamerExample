@@ -40,9 +40,8 @@ int basic_tutorial_3_main(int argc, char *argv[]) {
 
     /* Set the URI to play */
     g_object_set(data.source, "uri", getMp4File().c_str(), NULL);
-
     /* Connect to the pad-added signal */
-    g_signal_connect (data.source, "pad-added", G_CALLBACK(basic_tutorial_3_pad_added_handler), &data);
+    g_signal_connect(data.source, "pad-added", G_CALLBACK(basic_tutorial_3_pad_added_handler), &data);
 
     /* Start playing */
     ret = gst_element_set_state(data.pipeline, GST_STATE_PLAYING);
@@ -110,10 +109,8 @@ static void basic_tutorial_3_pad_added_handler(GstElement *src, GstPad *new_pad,
     GstStructure *new_pad_struct;
     const gchar *new_pad_type;
 
-    g_print("Received new pad '%s' from '%s':\n", GST_PAD_NAME (new_pad), GST_ELEMENT_NAME (src));
-
-    /* If our converter is already linked, we have nothing to do here */
-    if (gst_pad_is_linked(sink_pad)) {
+    g_print("Received new pad '%s' from '%s':\n", GST_PAD_NAME(new_pad), GST_ELEMENT_NAME(src));
+    if (gst_pad_is_linked(sink_pad)) { /* If our converter is already linked, we have nothing to do here */
         g_print("  We are already linked. Ignoring.\n");
         goto exit;
     }

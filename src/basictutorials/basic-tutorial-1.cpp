@@ -3,7 +3,6 @@
 //
 
 #include "basic-tutorial-1.h"
-#include "gst-def.h"
 
 int basic_tutorial_1_main(int argc, char *argv[]) {
     GstElement *pipeline;
