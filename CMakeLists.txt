@@ -15,6 +15,9 @@ include_directories(
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     #
     set(gstreamer_dir /usr/lib/x86_64-linux-gnu)
+    set(x264_dir /home/wuwenbin/devlop/git.code/x264/build)
+    set(x265_dir /home/wuwenbin/devlop/git.code/x265-20230215/libx265)
+    set(vpx_dir /home/wuwenbin/devlop/git.code/libvpx-1.13.0/libvpx)
 
     include_directories(
             /usr/include/gstreamer-1.0
@@ -26,7 +29,9 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
             /usr/include/cairo
             /usr/include/harfbuzz
             /usr/include/gdk-pixbuf-2.0
-            /usr/local/include
+            ${x264_dir}/include
+            ${x265_dir}/include
+            ${vpx_dir}/include
     )
 
     # 将第三方库作为动态库引用
@@ -56,6 +61,7 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     add_library(pango SHARED IMPORTED)
     add_library(x264 SHARED IMPORTED)
     add_library(x265 SHARED IMPORTED)
+    add_library(vpx SHARED IMPORTED)
 
     set_target_properties(glib PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libglib-2.0.so)
     set_target_properties(gobject PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgobject-2.0.so)
@@ -66,8 +72,9 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(atk PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libatk-1.0.so)
     set_target_properties(harfbuzz PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libharfbuzz.so)
     set_target_properties(pango PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libpango-1.0.so)
-    set_target_properties(x264 PROPERTIES IMPORTED_LOCATION /usr/local/lib/libx264.so)
-    set_target_properties(x265 PROPERTIES IMPORTED_LOCATION /usr/local/lib/libx265.so)
+    set_target_properties(x264 PROPERTIES IMPORTED_LOCATION ${x264_dir}/lib/libx264.so)
+    set_target_properties(x265 PROPERTIES IMPORTED_LOCATION ${x265_dir}lib/libx265.so)
+    set_target_properties(vpx PROPERTIES IMPORTED_LOCATION ${vpx_dir}/lib/libvpx.so)
 
     # mac 平台
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
@@ -202,6 +209,7 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
             pango
             x264
             x265
+            vpx
     )
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     #    target_link_libraries(gstreamerExample)
