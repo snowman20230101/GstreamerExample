@@ -13,11 +13,13 @@ include_directories(
 
 # linux 平台
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
-    #
+    # set root dir
     set(gstreamer_dir /usr/lib/x86_64-linux-gnu)
-    set(x264_dir /home/wuwenbin/devlop/git.code/x264/build)
-    set(x265_dir /home/wuwenbin/devlop/git.code/x265-20230215/libx265)
-    set(vpx_dir /home/wuwenbin/devlop/git.code/libvpx-1.13.0/libvpx)
+    set(x264_dir /home/wuwenbin/third_party/object/x264-20230215/build/pwd)
+    set(x265_dir /home/wuwenbin/third_party/object/x265-20230215/bld/pwd)
+    set(vpx_dir /home/wuwenbin/third_party/object/libvpx-1.13.0/build/pwd)
+    set(ffmpeg_dir /home/wuwenbin/third_party/object/ffmpeg-5.1.2/build)
+    set(opencv_dir /home/wuwenbin/third_party/object/opencv-4.6.0/build/pwd)
 
     include_directories(
             /usr/include/gstreamer-1.0
@@ -32,6 +34,8 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
             ${x264_dir}/include
             ${x265_dir}/include
             ${vpx_dir}/include
+            ${ffmpeg_dir}/include
+            ${opencv_dir}/include/opencv4
     )
 
     # 将第三方库作为动态库引用
@@ -50,6 +54,7 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(gst_audio PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgstaudio-1.0.so)
     set_target_properties(gst_net PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgstnet-1.0.so)
 
+    # gst - obj
     add_library(glib SHARED IMPORTED)
     add_library(gobject SHARED IMPORTED)
     add_library(gtk_30 SHARED IMPORTED)
@@ -63,6 +68,33 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     add_library(x265 SHARED IMPORTED)
     add_library(vpx SHARED IMPORTED)
 
+    # ffmpeg
+    add_library(avdevice SHARED IMPORTED)
+    add_library(avfilter SHARED IMPORTED)
+    add_library(avformat SHARED IMPORTED)
+    add_library(avcodec SHARED IMPORTED)
+    add_library(postproc SHARED IMPORTED)
+    add_library(swresample SHARED IMPORTED)
+    add_library(swscale SHARED IMPORTED)
+    add_library(avutil SHARED IMPORTED)
+
+    #opencv
+    add_library(core SHARED IMPORTED)
+    add_library(flann SHARED IMPORTED)
+    add_library(imgproc SHARED IMPORTED)
+    add_library(ml SHARED IMPORTED)
+    add_library(photo SHARED IMPORTED)
+    add_library(dnn SHARED IMPORTED)
+    add_library(features2d SHARED IMPORTED)
+    add_library(imgcodecs SHARED IMPORTED)
+    add_library(videoio SHARED IMPORTED)
+    add_library(calib3d SHARED IMPORTED)
+    add_library(highgui SHARED IMPORTED)
+    add_library(objdetect SHARED IMPORTED)
+    add_library(stitching SHARED IMPORTED)
+    add_library(video SHARED IMPORTED)
+
+    # gst - obj
     set_target_properties(glib PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libglib-2.0.so)
     set_target_properties(gobject PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgobject-2.0.so)
     set_target_properties(gtk_30 PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libgtk-3.so)
@@ -72,9 +104,37 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     set_target_properties(atk PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libatk-1.0.so)
     set_target_properties(harfbuzz PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libharfbuzz.so)
     set_target_properties(pango PROPERTIES IMPORTED_LOCATION ${gstreamer_dir}/libpango-1.0.so)
+
+    # encoder
     set_target_properties(x264 PROPERTIES IMPORTED_LOCATION ${x264_dir}/lib/libx264.so)
-    set_target_properties(x265 PROPERTIES IMPORTED_LOCATION ${x265_dir}lib/libx265.so)
+    set_target_properties(x265 PROPERTIES IMPORTED_LOCATION ${x265_dir}/lib/libx265.so)
     set_target_properties(vpx PROPERTIES IMPORTED_LOCATION ${vpx_dir}/lib/libvpx.so)
+
+    # ffmpeg
+    set_target_properties(avdevice PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libavdevice.so.59.7.100)
+    set_target_properties(avfilter PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libavfilter.so.8.44.100)
+    set_target_properties(avformat PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libavformat.so.59.27.100)
+    set_target_properties(avcodec PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libavcodec.so.59.37.100)
+    set_target_properties(postproc PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libpostproc.so.56.6.100)
+    set_target_properties(swresample PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libswresample.so.4.7.100)
+    set_target_properties(swscale PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libswscale.so.6.7.100)
+    set_target_properties(avutil PROPERTIES IMPORTED_LOCATION ${ffmpeg_dir}/lib/libavutil.so.57.28.100)
+
+    # opencv
+    set_target_properties(core PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_core.so.4.6.0)
+    set_target_properties(flann PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_flann.so.4.6.0)
+    set_target_properties(imgproc PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_imgproc.so.4.6.0)
+    set_target_properties(ml PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_ml.so.4.6.0)
+    set_target_properties(photo PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_photo.so.4.6.0)
+    set_target_properties(dnn PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_dnn.so.4.6.0)
+    set_target_properties(features2d PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_features2d.so.4.6.0)
+    set_target_properties(imgcodecs PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_imgcodecs.so.4.6.0)
+    set_target_properties(videoio PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_videoio.so.4.6.0)
+    set_target_properties(calib3d PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_calib3d.so.4.6.0)
+    set_target_properties(highgui PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_highgui.so.4.6.0)
+    set_target_properties(objdetect PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_objdetect.so.4.6.0)
+    set_target_properties(stitching PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_stitching.so.4.6.0)
+    set_target_properties(video PROPERTIES IMPORTED_LOCATION ${opencv_dir}/lib/libopencv_video.so.4.6.0)
 
     # mac 平台
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
@@ -193,6 +253,7 @@ add_executable(
 if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     target_link_libraries(
             gstreamerExample
+            # gstreamer
             gstreamer
             gst_pbutils
             gst_video
@@ -207,9 +268,34 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
             atk
             harfbuzz
             pango
+            # encoder
             x264
             x265
             vpx
+            # ffmpeg
+            avdevice
+            avfilter
+            avformat
+            avcodec
+            postproc
+            swresample
+            swscale
+            avutil
+            # opencv
+            core
+            flann
+            imgproc
+            ml
+            photo
+            dnn
+            features2d
+            imgcodecs
+            videoio
+            calib3d
+            highgui
+            objdetect
+            stitching
+            video
     )
 elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     #    target_link_libraries(gstreamerExample)

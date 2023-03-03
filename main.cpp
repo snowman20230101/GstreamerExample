@@ -23,6 +23,12 @@
 #include "playback-tutorial-2.h"
 #include "basic-encoder-h264.h"
 
+extern "C" {
+#include <libavutil/avutil.h>
+}
+
+#include <opencv2/opencv.hpp>
+
 int ext_encoder_h26x_test() {
     const char *srcFile = "/home/wuwenbin/video/test.yuv";
 
@@ -51,6 +57,8 @@ int main(int argc, char *argv[]) {
     printf("cairo version is %s\n", cairo_version);
 
     printf("x265 version is %s.\n", x265_version_str);
+    printf("vpx version %s\n", vpx_codec_build_config());
+    printf("ffmpeg version is %s \n\n", av_version_info());
 
 //    create_element(argc, argv);
 
@@ -97,8 +105,6 @@ int main(int argc, char *argv[]) {
 //    play_back_tutorial_2_main(argc, argv);
 
 //    ext_encoder_h26x_test();
-
-    printf("vpx version %s\n", vpx_codec_version_str());
 
     return 0;
 }
